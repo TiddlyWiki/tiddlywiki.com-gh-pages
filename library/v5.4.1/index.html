@@ -1,0 +1,1469 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="application-name" content="TiddlyWiki Plugin Library" />
+<meta name="application-version" content="v0.0.0" />
+<meta name="copyright" content="Copyright 2015 Jeremy Ruston" />
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<title>Plugin Library</title>
+<script>
+var assetList = [
+    {
+        "title": "$:/plugins/tiddlywiki/async",
+        "name": "Async",
+        "description": "async.js library",
+        "author": "Caolan McMahon",
+        "list": "readme license",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin packages [[async.js|https://github.com/caolan/async]] for use by other plugins. It does not provide any end-user visible features.\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/aws",
+        "name": "AWS",
+        "description": "Amazon Web Services extensions and tools",
+        "list": "readme setup commands lambda",
+        "dependents": "$:/plugins/tiddlywiki/async $:/plugins/tiddlywiki/jszip",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "type": "application/json",
+        "readme": "This plugin provides several tools for working with Amazon Web Services:\n\n* Templates for saving a TiddlyWiki as a single JavaScript file in a ZIP file that can be executed as an AWS Lambda function. In this form, TiddlyWiki is a self contained single file containing both code and data, just like the standalone HTML file configuration\n* Commands that can be used to interact with AWS services, under both the Node.js and Lambda configurations of TiddlyWiki\n* A new \"aws-encodeuricomponent\" filter that acts like the core \"encodeuricomponent\" filter except it additionally encodes the single quote character",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/bibtex",
+        "name": "BibTeX",
+        "description": "BibTeX importer",
+        "author": "Henrik Muehe and Mikola Lysenko",
+        "list": "readme license",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "The BibTeX plugin provides a deserializer that can convert bibliographic entries in `.bib` files into individual tiddlers.\n\nYou can use it in the browser by dragging and dropping a `.bib` file into the TiddlyWiki window. Under Node.js, use the `--load` command to load a `.bib` file.\n\nThe conversion is as follows:\n\n* `title` comes from citationKey\n* `bibtex-entry-type` comes from entryType\n* all `entryTags` are assigned to fields with the prefix `bibtex-`\n\nThe BibTeX plugin is based on the library [[bibtexParseJs by Henrik Muehe and Mikola Lysenko|https://github.com/ORCID/bibtexParseJs]].\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/browser-sniff",
+        "name": "Browser Sniff",
+        "description": "Browser feature detection",
+        "list": "readme usage",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin adds a number of `$:/info/` tiddlers containing information about the current browser.\n\nIt allows you to create content that is presented in a way that is responsive to different browsers.\n\nFor example, https://tiddlywiki.com uses this plugin to present the user with the best options for getting started depending on their browser.\n\n[[Source code|https://github.com/TiddlyWiki/TiddlyWiki5/blob/master/plugins/tiddlywiki/browser-sniff]]\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/browser-storage",
+        "name": "Browser Storage",
+        "description": "Local storage in the browser",
+        "list": "readme settings",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin enables ~TiddlyWiki to save tiddlers in [[browser local storage|https://en.wikipedia.org/wiki/Web_storage#localStorage]]. This means that changes are stored within the browser, and automatically re-applied any time the base wiki is reloaded.\n\nAt startup, the plugin reads tiddlers from local storage. Any tiddlers that are identical to those built into the file are deleted from local storage. Once the wiki is up and running, any tiddler changes are written straight to local storage.\n\n!! Optional use with ~TiddlyWeb plugin\n\nFor wikis served from a ~TiddlyWeb compatible server, including the ~TiddlyWiki Node JS server, this plugin may be added to provide temporary local storage of tiddler changes when the [[tiddlyweb sync adapter|https://github.com/TiddlyWiki/TiddlyWiki5/tree/master/plugins/tiddlywiki/tiddlyweb]] is unable to successfully synchronise with the server, and to automatically synchronise tiddlers saved offline in browser storage once connection is re-established. The use of browser storage allows for tiddlers saved offline to be synchronised with the server even in the case where the browser is closed or the user (purposely, accidentally, or automatically in the case of a mobile browser periodically refreshing) navigates away from the wiki.\n\nChanges will be synchronised with the server the next time the wiki is loaded in the browser. Tiddlers are removed from browser-storage once synchronised to the server.\n\nBy default only state tiddlers are saved by this plugin. On the settings tab, you can update the Save Filter to save all content and system tiddlers. The third example provided is a good choice. \n\n!!! Limitations\n\n* ''Deleted tiddlers:'' Tiddler deletions while offline are not synchronised with the server due to technical limitations. The intent of using this plugin with a ~TiddlyWeb server is to prevent the loss of new or modified content while temporarily offline. \n* ''Title changes:'' Tiddlers are saved by title, so a change to a tiddler title will be saved and synchronised to the server, but it will not overwrite the tiddler with the original title. \n* ''Browser storage:'' While useful as a safety measure for //temporary// offline usage, as noted below, browser storage itself has limitations that could still result in losing data in some cases.   \n\n!!Browser local storage is not a panacea for TiddlyWiki:\n\n* Browsers limit the amount of local storage available to a page, typically to 5 or 10MB\n* Keeping personal data in browser local storage can lead to unexpected privacy violations\n* Browsers reserve the right to without warning delete data stored in local storage at any time\n* Browsers tie local storage to a URL which can lead to problems if you move a wiki to a URL previously occupied by a different wiki\n\nPlease use this plugin with caution. There are a number of unresolved issues and open questions:\n\n* Innerwikis read the local storage of their parent wikis\n* This plugin does not interfere with the existing saver mechanism, so you'll still get warnings when refreshing the page, even if your changes are safely committed to local storage\n* There is a possibility that tiddlers might be transferred between different wikis if they are accessed via the same URL. This is particularly likely when running in local client server configuration under Node.js\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/classictools",
+        "name": "Classic Tools",
+        "description": "TiddlyWiki Classic tools",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin provides facilities for working with TiddlyWiki Classic. It is used in the build process for TiddlyWiki Classic.\n\nThe additional features are:\n\n* A ''tiddlerdeserializer'' module for reading TiddlyWiki Classic `.recipe` files\n* Templates for building TiddlyWiki Classic.\n\nSee https://github.com/TiddlyWiki/tiddlywiki.com for more details.\n\n[[Source code|https://github.com/TiddlyWiki/TiddlyWiki5/blob/master/plugins/tiddlywiki/classictools]]\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/codemirror",
+        "name": "CodeMirror",
+        "description": "CodeMirror editor",
+        "list": "readme usage keyboard license",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin provides an enhanced text editor component based on [[CodeMirror|http://codemirror.net]]. The basic configuration is designed to be as lightweight as possible and is just around 235kb of size. Additional features can be installed with ~CodeMirror ~AddOns from the plugin library.\n\n[[Source code|https://github.com/TiddlyWiki/TiddlyWiki5/blob/master/plugins/tiddlywiki/codemirror]]\n\nBased on ~CodeMirror version 5.65.19\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/codemirror-autocomplete",
+        "name": "CodeMirror Autocomplete",
+        "description": "Autocompletion for CodeMirror",
+        "parent-plugin": "$:/plugins/tiddlywiki/codemirror",
+        "dependents": "$:/plugins/tiddlywiki/codemirror-mode-css",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "type": "application/json",
+        "readme": "This plugin enhances the [[CodeMirror|http://codemirror.net]] text editor with Autocompletion functionality. It needs the latest [[CodeMirror plugin|$:/plugins/tiddlywiki/codemirror]] to be installed\n\nIt adds Autocompletion for ''html'', ''javascript'' and ''xml'' and also for ''already present words'' within a text-editor instance\n\nThe ''Keyboard Shortcut'' for autocompletion is `Ctrl+Space`\n\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/codemirror-closebrackets",
+        "name": "CodeMirror Close Brackets",
+        "description": "Close brackets for CodeMirror",
+        "parent-plugin": "$:/plugins/tiddlywiki/codemirror",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin adds the ability to automatically insert the closing brackets when you type an opening bracket.\nAlso enables highlighting of matching brackets.\n\nIt needs the latest [[CodeMirror plugin|$:/plugins/tiddlywiki/codemirror]] to be installed\n\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/codemirror-closetag",
+        "name": "CodeMirror Close Tag",
+        "description": "Close tags automatically for CodeMirror",
+        "parent-plugin": "$:/plugins/tiddlywiki/codemirror",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin adds the ability to ''automatically close Tags''. It needs the latest [[CodeMirror plugin|$:/plugins/tiddlywiki/codemirror]] to be installed\n\n\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/codemirror-fullscreen",
+        "name": "CodeMirror Fullscreen",
+        "description": "Fullscreen editing for CodeMirror",
+        "parent-plugin": "$:/plugins/tiddlywiki/codemirror",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin adds a ''Fullscreen editing Mode'' to the [[CodeMirror|http://codemirror.net]] text editor. It needs the latest [[CodeMirror plugin|$:/plugins/tiddlywiki/codemirror]] to be installed\n\nPressing ''F11'' with the focus within the editor-textarea will make the editor go fullscreen, pressing ''F11'' again leaves fullscreen-mode\n\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/codemirror-keymap-emacs",
+        "name": "CodeMirror Keymap Emacs",
+        "description": "Keymap compatible with Emacs for CodeMirror",
+        "parent-plugin": "$:/plugins/tiddlywiki/codemirror",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin adds a ''Keymap'' with some of the most important ''Emacs'' keyboard shortcuts\n\nFor more information about available ''keyboard shortcuts'' see the [ext[CodeMirror emacs demo|https://codemirror.net/demo/emacs.html]]\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/codemirror-keymap-sublime-text",
+        "name": "CodeMirror Keymap Sublime Text",
+        "description": "Keymap compatible with Sublime Text for CodeMirror",
+        "parent-plugin": "$:/plugins/tiddlywiki/codemirror",
+        "dependents": "$:/plugins/tiddlywiki/codemirror-search-replace $:/plugins/tiddlywiki/codemirror-closebrackets",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "type": "application/json",
+        "readme": "This plugin adds a ''Keymap'' with the most important ''Sublime Text'' keyboard shortcuts\n\nShortcuts that interfere with ~TiddlyWiki shortcuts differ from the original sublime shortcuts to preserve functionality\n\n\n|Shortcut |Function |h\n|Shift-Tab |indentLess |\n|Shift-Ctrl-K |deleteLine |\n|Alt-Q |wrapLines |\n|Alt-T |transposeChars |\n|Alt-Left |goSubwordLeft |\n|Alt-Right |goSubwordRight |\n|Ctrl-Up |scrollLineUp |\n|Ctrl-Down |scrollLineDown |\n|Alt-L |selectLine |\n|Shift-Alt-L |splitSelectionByLine |\n|Ctrl-Esc |singleSelectionTop |\n|Shift-Enter |insertLineAfter |\n|Shift-Ctrl-Enter |insertLineBefore |\n|Ctrl-D |selectNextOccurrence |\n|Shift-Ctrl-Space |selectScope |\n|Shift-Ctrl-M |selectBetweenBrackets |\n|Alt-M |goToBracket |\n|Shift-Ctrl-Up |swapLineUp |\n|Shift-Ctrl-Down |swapLineDown |\n|Ctrl-/ |toggleCommentIndented |\n|Ctrl-J |joinLines |\n|Shift-Ctrl-D |duplicateLine |\n|F9 |sortLines |\n|Ctrl-F9 |sortLinesInsensitive |\n|F2 |nextBookmark |\n|Shift-F2 |prevBookmark |\n|Ctrl-F2 |toggleBookmark |\n|Shift-Ctrl-F2 |clearBookmarks |\n|Alt-F2 |selectBookmarks |\n|Backspace |smartBackspace |\n|Ctrl-K Ctrl-K |delLineRight |\n|Ctrl-K Alt-U |upcaseAtCursor |\n|Ctrl-K Alt-L |downcaseAtCursor |\n|Ctrl-K Ctrl-Space |setSublimeMark |\n|Ctrl-K Ctrl-A |selectToSublimeMark |\n|Ctrl-K Alt-D |deleteToSublimeMark |\n|Ctrl-K Ctrl-X |swapWithSublimeMark |\n|Ctrl-K Ctrl-Y |sublimeYank |\n|Ctrl-K Ctrl-C |showInCenter |\n|Ctrl-K Ctrl-G |clearBookmarks |\n|Ctrl-K Ctrl-Backspace |delLineLeft |\n|Ctrl-K Ctrl-0 |unfoldAll |\n|Ctrl-K Ctrl-J |unfoldAll |\n|Ctrl-Alt-Up |addCursorToPrevLine |\n|Ctrl-Alt-Down |addCursorToNextLine |\n|Ctrl-F3 |findUnder |\n|Shift-Ctrl-F3 |findUnderPrevious |\n|Shift-Ctrl-[ |fold |\n|Shift-Ctrl-] |unfold |\n|Ctrl-H |replace |\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/codemirror-keymap-vim",
+        "name": "CodeMirror Keymap Vim",
+        "description": "Keymap compatible with Vim for CodeMirror",
+        "parent-plugin": "$:/plugins/tiddlywiki/codemirror",
+        "dependents": "$:/plugins/tiddlywiki/codemirror-search-replace $:/plugins/tiddlywiki/codemirror-closebrackets",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "type": "application/json",
+        "readme": "This plugin adds a ''Keymap'' with some of the most important ''Vim'' keyboard shortcuts\n\nFor information about available ''keyboard shortcuts'' see the [ext[CodeMirror vim demo|https://codemirror.net/demo/vim.html]]\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/codemirror-mode-css",
+        "name": "CodeMirror Mode CSS",
+        "description": "CSS highlighting mode for CodeMirror",
+        "parent-plugin": "$:/plugins/tiddlywiki/codemirror",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin adds Syntax Highlighting for CSS tiddlers (text/css) to the [[CodeMirror|http://codemirror.net]] text editor. It needs the latest [[CodeMirror plugin|$:/plugins/tiddlywiki/codemirror]] to be installed\n\n\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/codemirror-mode-htmlembedded",
+        "name": "CodeMirror Mode HTML Embedded",
+        "description": "Embedded HTML highlighting mode for CodeMirror",
+        "parent-plugin": "$:/plugins/tiddlywiki/codemirror",
+        "dependents": "$:/plugins/tiddlywiki/codemirror-mode-htmlmixed $:/plugins/tiddlywiki/codemirror-mode-javascript $:/plugins/tiddlywiki/codemirror-mode-css $:/plugins/tiddlywiki/codemirror-mode-xml",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "type": "application/json",
+        "readme": "This plugin adds Syntax Highlighting for Embedded-HTML tiddlers (application/x-aspx, application/x-ejs, application/x-jsp and application/x-erb) to the [[CodeMirror|http://codemirror.net]] text editor. It needs the latest [[CodeMirror plugin|$:/plugins/tiddlywiki/codemirror]] to be installed\n\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/codemirror-mode-htmlmixed",
+        "name": "CodeMirror Mode HTML Mixed",
+        "description": "HTML mixed highlighting mode for CodeMirror",
+        "parent-plugin": "$:/plugins/tiddlywiki/codemirror",
+        "dependents": "$:/plugins/tiddlywiki/codemirror-mode-xml $:/plugins/tiddlywiki/codemirror-mode-javascript $:/plugins/tiddlywiki/codemirror-mode-css",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "type": "application/json",
+        "readme": "This plugin adds Syntax Highlighting for HTML tiddlers (text/html) to the [[CodeMirror|http://codemirror.net]] text editor. It needs the latest [[CodeMirror plugin|$:/plugins/tiddlywiki/codemirror]] to be installed\n\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/codemirror-mode-javascript",
+        "name": "CodeMirror Mode JavaScript",
+        "description": "JavaScript highlighting mode for CodeMirror",
+        "parent-plugin": "$:/plugins/tiddlywiki/codemirror",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin adds Syntax Highlighting for Javascript tiddlers (application/javascript) to the [[CodeMirror|http://codemirror.net]] text editor. It needs the latest [[CodeMirror plugin|$:/plugins/tiddlywiki/codemirror]] to be installed\n\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/codemirror-mode-markdown",
+        "name": "CodeMirror Mode Markdown",
+        "description": "Markdown highlighting mode for CodeMirror",
+        "parent-plugin": "$:/plugins/tiddlywiki/codemirror",
+        "dependents": "$:/plugins/tiddlywiki/codemirror-mode-xml",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "type": "application/json",
+        "readme": "This plugin adds Syntax Highlighting for Markdown tiddlers (text/x-markdown) to the [[CodeMirror|http://codemirror.net]] text editor. It needs the latest [[CodeMirror plugin|$:/plugins/tiddlywiki/codemirror]] to be installed\n\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/codemirror-mode-x-tiddlywiki",
+        "name": "CodeMirror Mode TiddlyWiki Classic",
+        "description": "Tiddlywiki Classic highlighting mode for CodeMirror",
+        "parent-plugin": "$:/plugins/tiddlywiki/codemirror",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin adds Syntax Highlighting for ~TiddlyWiki Classic tiddlers (text/x-tiddlywiki) to the [[CodeMirror|http://codemirror.net]] text editor. It needs the latest [[CodeMirror plugin|$:/plugins/tiddlywiki/codemirror]] to be installed\n\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/codemirror-mode-xml",
+        "name": "CodeMirror Mode XML",
+        "description": "XML highlighting mode for CodeMirror",
+        "parent-plugin": "$:/plugins/tiddlywiki/codemirror",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin is a requirement for other Syntax-highlighting plugins and adds Highlighting for XML tiddlers (application/xml) to the [[CodeMirror|http://codemirror.net]] text editor. It needs the latest [[CodeMirror plugin|$:/plugins/tiddlywiki/codemirror]] to be installed\n\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/codemirror-search-replace",
+        "name": "CodeMirror Search and Replace",
+        "description": "Search and replace for CodeMirror",
+        "parent-plugin": "$:/plugins/tiddlywiki/codemirror",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin enhances the [[CodeMirror|http://codemirror.net]] text editor with Search and Replace functionality. It needs the latest [[CodeMirror plugin|$:/plugins/tiddlywiki/codemirror]] to be installed\n\nIt adds these Keyboard Shortcuts to ~CodeMirror:\n\n|Shortcut |Function |h\n|Ctrl-F / Cmd-F |Start searching |\n|Ctrl-G / Cmd-G / Shift-F3 |Find next |\n|Shift-Ctrl-G / Shift-Cmd-G / F3 |Find previous |\n|Shift-Ctrl-F / Cmd-Option-F |Replace |\n|Shift-Ctrl-R / Shift-Cmd-Option-F |Replace all |\n|Alt-F |Persistent search (dialog doesn't autoclose, enter to find next, Shift-Enter to find previous) |\n|Alt-G |Jump to line |\n\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/codemirror-trailingspace",
+        "name": "CodeMirror Show Trailing Space",
+        "description": "Show trailing space in CodeMirror",
+        "parent-plugin": "$:/plugins/tiddlywiki/codemirror",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin contains the [[trailingspace|https://codemirror.net/5/doc/manual.html#addon_trailingspace]]\naddon for CodeMirror, and provides a default style (red squiggles).\n\nFirst install the [[CodeMirror plugin|$:/plugins/tiddlywiki/codemirror]].\n\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/comments",
+        "name": "Comments",
+        "description": "Threaded tiddler comments",
+        "list": "readme config",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin provides a simple means for adding threaded comments to tiddlers.\n\n* Click the \"add comment\" button to make a new comment, and then click the \"save\" button to save it\n* You can comment on a tiddler itself, or add a comment to an existing comment\n* The sidebar tab ''Comments'' lists a timeline of all comments\n* Comments are attributed to the username stored in the system tiddler [[$:/status/UserName]]\n* By default, comments are available on all non-system tiddlers. The ''config'' tab lets you customise which tiddlers can accept comments by specifying a filter extension\n* The buttons for adding and editing comments are only available if the system tiddler [[$:/status/IsReadOnly]] is not set to `yes`\n* Use the \"All comments\" option in the $:/AdvancedSearch ''Filter'' tab to see or export all comments\n\n!! Data Model\n\nThe data model employed by the comments plugin is very simple:\n\n* Comment tiddlers are identified by the `role` field being set to `comment`\n* The `list` field of comment tiddlers lists the tiddlers to which this comment applies\n** It is thus possible for a comment to be applied to multiple tiddlers at once\n** The links between comments can be preserved when renaming them by using the relink checkbox in the edit template\n* The `edit-mode` field of comment tiddlers is set to `yes` to display it in edit mode, or `no` to display it in view mode\n* The `saved-text` field is updated when switching to edit mode so that it can be restored if the user cancels\n\n",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/confetti",
+        "name": "Confetti",
+        "description": "Animated confetti effect",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "\\define show-example(name)\n<$let title={{{ [[$:/plugins/tiddlywiki/confetti/examples/]addsuffix<__name__>] }}}>\n\nFor example:\n\n<$macrocall $name=\"copy-to-clipboard-above-right\" src=<<__src__>>/>\n\n<$codeblock code={{{ [<title>get[text]] }}}/>\n\nRenders as:\n\n<$transclude tiddler=<<title>> mode=\"block\"/>\n\n</$let>\n\\end\n\n! Introduction\n\nThis plugin adds a programmable confetti cannon to your TiddlyWiki. It is based on https://www.kirilv.com/canvas-confetti/ by Kiril Vatev.\n\n! Usage\n\nThe confetti cannon can be controlled using messages or via the `<$confetti>` widget. Use the message approach when triggering confetti in response to an action (such as clicking a button). Use the widget approach when confetti is to be triggered by a condition (such as a target number of words being reached).\n\n!! Messages: tm-confetti-launch and tm-confetti-reset\n\nThe `tm-confetti-launch` message launches the confetti cannon. See below for the available parameters.\n\nThe `tm-confetti-reset` message cancels any confetti that is in progress.\n\n<<show-example staggered>>\n\n!! Widget: `<$confetti>`\n\nThe `<$confetti>` widget launches the confetti cannon when it is first rendered. See below for the available attributes.\n\nTypically it is used in conjunction with a `<$list>` or `<$reveal>` widget that shows the widget when the conditions required to trigger the confetti are satisfied.\n\nIn this example, the confetti will be launched when the word \"launch\" in typed into the box.\n\n<<show-example typing-trigger>>\n\n!! Confetti Launch parameters\n\nThe following options are supported:\n\n|!Name |!Description |!Default |\n|''delay'' |Number of milliseconds to delay the launch |0 |\n|''particleCount'' |The number of confetti to launch |50 |\n|''angle'' |The angle in which to launch the confetti, in degrees (90 is straight up) |90 |\n|''spread'' |How far off center the confetti can go, in degrees. 45 means the confetti will launch at the defined `angle` plus or minus 22.5 degrees |45 |\n|''startVelocity'' |How fast the confetti will start going, in pixels |45 |\n|''decay'' |How quickly the confetti will lose speed. Keep this number between 0 and 1, otherwise the confetti will gain speed |0.9 |\n|''gravity'' |How quickly the particles are pulled down. 1 is full gravity, 0.5 is half gravity, etc. |1 |\n|''drift'' |How much to the side the confetti will drift. The default is 0, meaning that they will fall straight down. Use a negative number for left and positive number for right |0 |\n|''ticks'' |How many times the confetti will move (this is an abstract quantity; the designed recommends playing with it if the confetti disappears too quickly for you) |200 |\n|''originX'' |The `x` position on the page, with `0` being the left edge and `1` being the right edge |0.5 |\n|''originY'' |The `y` position on the page, with `0` being the top edge and `1` being the bottom edge |0.5 |\n|''colors'' |A space separated list of color strings in hex format (eg `#bada55` or `#ce5`) | |\n|''shapes'' |A space separated list of shapes for the confetti. The possible values are `square`, `circle`, and `star`. The default is to use both squares and circles in an even mix. To use a single shape, you can provide just one shape in the list, such as `star`. You can also change the mix by providing a value such as `circle circle square` to use two third circles and one third squares | |\n|''scalar'' |Scale factor for each confetti particle. Use decimals to make the confetti smaller |1 |\n|''zIndex'' |Z-index of confetti. Increase the value if the confetti is appearing behind other on-screen elements|100 |\n|''disableForReducedMotion'' |Set to `yes` to entirely disable confetti for users that [[prefer reduced motion|https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion]] |`no` |\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/consent-banner",
+        "name": "Consent Banner",
+        "description": "Consent banner for GDPR etc",
+        "list": "readme docs youtube config",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "The ''consent-banner'' plugin helps make websites that are compliant with \"cookie legislation\" such as the [[EU General Data Protection Regulation|https://gdpr.eu/cookies/]].\nIt presents a banner inviting the user to accept or reject cookies, keeping track of their consent in local storage so that the banner can be hidden on subsequent visits.\n\nBy default, content embedded with &lt;iframe>, &lt;embed> and &lt;object> is blocked unless the user consents to accept cookies.\n\nConsent status is  available via a configuration tiddler so that it is possible to construct content that behaves differently depending upon whether consent has been granted. As an example, a macro is provided for embedding ~YouTube videos that automatically uses the youtube-nocookie.com variant of video URLs unless the user has accepted cookies.\n\nPlease note that using this plugin does not guarantee compliance with any particular legislation. You will need to understand the technical issues specific to your situation, and if necessary seek legal advice.\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/dom-to-image",
+        "name": "Dom-to-image",
+        "description": "Save DOM nodes as images",
+        "list": "readme docs",
+        "stability": "STABILITY_1_EXPERIMENTAL",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "* [[dom-to-image-more|https://github.com/1904labs/dom-to-image-more]], an open source library for saving web content as images",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/dynannotate",
+        "name": "Dynannotate",
+        "description": "Dynamic content annotation",
+        "author": "JeremyRuston",
+        "core-version": ">=5.0.0",
+        "list": "readme examples",
+        "dependents": "$:/plugins/tiddlywiki/dynaview",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "type": "application/json",
+        "readme": "The ''Dynannotate'' plugin allows annotations on textual content to be created and displayed. It has several components:\n\n* The dynannotate widget draws clickable textual annotations, search highlights and search snippets as overlays over the top of the content that it contains\n* The selection tracker keeps track of changes to the selected text in the main browser window. It triggers an action string when the selection changes, passing it the details of the selection. It can be used to display a popup menu\n** The original legacy selection tracker is also provided for backwards compatibility. It is much more limited, and not recommended for new projects\n* The element spotlight highlights on screen elements using a spotlight animation\n\n!! Dynannotate Widget\n\nThe attributes of the `<$dynannotate>` widget describe annotations to be overlaid over the text contained within its child widgets. A single annotation can be directly applied using the attributes or multiple annotations can be applied by providing a filter identifying the \"annotation tiddlers\" that specify each annotation.\n\nThe content of the  `<$dynannotate>` widget should not contain HTML `<input>` or `<textarea>` text editing elements (and therefore should not contain TiddlyWiki's `<$edit-text>` widget)\n\nThe `<$dynannotate>` widget uses the selection tracker to support a popup that dynamically tracks selected text within it.\n\n!!! Attributes\n\n|!Attribute |!Description |\n|target |Optional text to be annotated |\n|targetPrefix |Optional prefix text to disambiguate the target |\n|targetSuffix |Optional suffix text to disambiguate the target |\n|filter |Filter identifying the annotation tiddlers applying to this content (see below) |\n|actions |Action string to be executed when an annotation is clicked. The variable `annotationTiddler` contains the title of the tiddler corresponding to the annotation that was clicked, and the variable `modifierKey` contains \"ctrl\", \"shift\", \"ctrl-shift\", \"normal\" according to which modifier keys were pressed |\n|popup |Popup state tiddler to be used to trigger a popup when an annotation is clicked |\n|floating |Setting to `yes` makes the popup need to be closed explicitly. |\n|search |Search text to be highlighted within the widget |\n|searchDisplay |\"overlay\" or \"snippet\" (see below) |\n|searchMode |\"literal\" (default), \"regexp\", \"whitespace\", \"words\" or \"some\" (see below) |\n|searchMinLength |Optional minimum length of search string |\n|searchCaseSensitive |\"yes\" (the default) for a case sensitive search, or \"no\" for a case insensitive search|\n|searchClass |Optional CSS class to be added to search overlays |\n|snippetContextLength |Optional length of search result contextual prefix/suffix |\n\nThe following attributes are only used with the legacy selection tracker:\n\n|!Attribute |!Description |\n|selection |Tiddler to which the currently selected text should be dynamically saved |\n|selectionPrefix |Tiddler to which up to 50 characters preceding the currently selected text should be dynamically saved |\n|selectionSuffix |Tiddler to which up to 50 characters succeeding the currently selected text should be dynamically saved |\n|selectionPopup |Popup state tiddler to be used to trigger a popup when text is selected |\n\nThe values supported by the `searchDisplay` attribute are:\n\n* `overlay` - display search results as overlays over the contained text\n* `snippet` - display search results as a sequence of highlighted snippets, and the original text is hidden. Selecting this option therefore disables the annotation functionality\n\nThe search modes supported by the `searchMode` attribute are:\n\n* `literal` or `normal` - a literal string of plain text to match (default).\n* `regexp` - a JavaScript-style regular expression (without the quoting backslashes and flags)\n* `whitespace` - a literal string to match while normalising runs of whitespace. Thus `A B` matches `A   B`.\n* `words` or `some` - treats the search string as a list of tokens separated by whitespace, and matches all tokens (regardless of ordering and whether there is other text in between)\n\nWhen the selection popup is triggered, the currently selected text can be found in the tiddler named in the `selection` attribute, with the disambiguating prefix and suffix in the tiddlers named in the `selectionPrefix` and `selectionPopup` tiddlers. Note that the selection text will be an empty string if the selection popup was triggered in response to a click (ie zero width selection).\n\nHere's a simple example that highlights the first occurrence of the word \"ut\" within the text contained within it:\n\n```\n<$dynannotate target=\"ut\">\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum\n</$dynannotate>\n```\n\nA prefix and/or suffix can be specified to disambiguate the annotation. For example, here we target the second occurrence of the word \"ut\":\n\n```\n<$dynannotate target=\"ut\" targetPrefix=\"ullamco laboris nisi \" targetSuffix=\" aliquip ex ea commodo consequat\">\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum\n</$dynannotate>\n```\n\nThe widget works by scanning the rendered text of its content, so it works even if the text is built dynamically:\n\n```\n<$dynannotate target=\"HelloThere\">\n<<list-links \"[tag[Work]]\">>\n</$dynannotate>\n```\n\n!!! Annotation Tiddlers\n\nAn annotation tiddler is a tiddler describing an annotation to be overlaid over another tiddler. Their fields are used as follows:\n\n|!Field |!Description |\n|title |By convention the prefix `$:/annotations/<username>/` is used, but any title can be used |\n|text |The text of the annotation |\n|created, creator, modified, modifier |As per TiddlyWiki normal behaviour |\n|annotate-tiddler |The title of the target tiddler being annotated (optional, see below) |\n|annotate-text |The text being annotated in the target tiddler |\n|annotate-prefix |Optional prefix to disambiguate the target annotation |\n|annotate-suffix |Optional suffix to disambiguate the target annotation |\n|annotate-colour |CSS colour for the annotation (defaults to `rgba(255,255,0,0.3)`) |\n|annotate-blend-mode |CSS [[mix blend mode|https://developer.mozilla.org/en-US/docs/Web/CSS/mix-blend-mode]] for the annotation (defaults to `multiply`) |\n\nNote that using the `annotate-tiddler` field to associate an annotation with the annotated tiddler is a lightweight convention employed by the examples; it isn't actually required by any of the JavaScript code. Thus authors can experiment with other techniques for recording the association.\n\n!! Selection Trackers\n\nThe selection trackers are enabled when the following configuration tiddlers are set to ''yes''.\n\n* $:/config/Dynannotate/SelectionTracker/Enable for the main selection tracker\n* $:/config/Dynannotate/LegacySelectionTracker/Enable for the legacy selection tracker\n\nBoth selection trackers are enabled by default.\n\n!!! Main Selection Tracker\n\nThe selection tracker triggers an action string whenever the browser text selection changes. The actions are delayed until the selection has not changed for 500ms (this means that the selection tracker is only triggered when the user pauses after completing a selection, and is not continuously invoked as the user drags the selection).\n\nThe selection tracker works within DOM subtrees that have the following structure:\n\n* The outer wrapper element has the attribute `data-selection-actions-title` containing the title of the tiddler containing the action string to be invoked when the selection changes\n* Each child element of the outer element must have a unique `id` attribute to identify it\n\n```\n<div data-selection-actions-title=\"{tiddler title}\">\n\t<div id=\"{title}\">\n\t\tContent text\n\t</div>\n\t...\n</div>\n```\n\nThe action string is invoked with the following variables:\n\n|!Variable |!Description |\n|`selection` |A JSON object representing the selection (see below) |\n|`dom-*` |All DOM attributes of the outer wrapper node are made available as variables, with the prefix `dom-` |\n|`tv-selection-posx` |X position of the selection in pixels |\n|`tv-selection-posy` |Y position of the selection in pixels |\n|`tv-selection-width` |Width of the selection in pixels |\n|`tv-selection-height` |Height of the selection in pixels |\n|`tv-selection-coords` |A co-ordinate string that can be used with the ActionPopupWidget to trigger a popup at the selection |\n\nThe JSON representation of the selection is as follows:\n\n```\n{\n\t\"chunks\": [\n\t\t{\n\t\t\t\"id\": \"id-of-first-chunk-of-selection\",\n\t\t\t\"text\": \"text-of-first-chunk-of-selection\",\n\t\t\t\"prefix\": \"optional-prefix-before-first-chunk-of-selection\",\n\t\t\t\"suffix\": \"optional-suffix-after-last-chunk-of-selection\"\n\t\t}\n\t\t...\n\t],\n\t\"variables\": {\n\t\t<variables listed above>\n\t}\n}\n```\n\nNotes:\n\n* Only the first chunk of the selection may have a \"prefix\" field which will contain any text at the start of the chunk preceding the selection\n* Only the last chunk of the selection may have a \"suffix\" field which will contain any text at the end of the chunk following the selection\n\n!!! Legacy Selection Tracker\n\nThe selection tracker is incorporated within the `<$dynannotate>` widget via the ''selection'', ''selectionPrefix'' ''selectionSuffix'' and ''selectionPopup'' attributes. It can be used independently for specialised applications.\n\nEach selection container is marked with the class `tc-dynannotate-selection-container`, and should contain the following attributes:\n\n* `data-annotation-selection-save`: title of tiddler to which the selected text should be saved\n* `data-annotation-selection-prefix-save`: title of tiddler to which up to 50 characters preceding the currently selected text should be dynamically saved\n* `data-annotation-selection-suffix-save`: title of tiddler to which up to 50 characters succeeding the currently selected text should be dynamically saved\n* `data-annotation-selection-popup`: title of state tiddler used to trigger the selection popup\n\nNotes:\n\n* The selection popup will disappear if the selection is cancelled; this will happen if the user clicks on any other element apart than a button. Thus it is not possible to have any interactive controls within the popup apart from buttons\n\n!! Element Spotlight\n\nThe `tm-spotlight-element` message causes a spotlight effect to briefly appear to highlight a specified element. The message accepts the following parameters:\n\n|!Parameter |!Description |\n|`selector` |CSS selector of the element to highlight |\n|{//Any parameter names starting with `selector-`}// |Fallback CSS selectors to be used if the primary selector does not resolve to an element |\n\nThe fallback CSS selectors are case-insensitively sorted by title before use, with uppercase letters sorting before lower case letters. The usual convention is to use numeric suffixes: `selector-00`, `selector-01` etc.\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/dynaview",
+        "name": "Dynaview",
+        "description": "Dynamic scrolling and zooming effects",
+        "list": "readme docs examples config",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "! Dynaview\n\nThis plugin makes it possible to build user interfaces that dynamically respond to changes in the browser viewport via scrolling or zooming:\n\n* CSS classes that allow rendering to be deferred until the output is scrolled into view\n* CSS classes that allow the opacity of DOM elements to vary according to the current zoom level\n* A daemon that can dynamically update a pair of state tiddlers with the current dimensions of the browser viewport\n* A daemon that can dynamically update the address bar with the title of the tiddler at the top of the viewport\n\nSome points to note about the zoom features:\n\n<<<\n\n* The zoom level currently only works on Safari, both on Mac OS and on the iPhone/iPad\n* The zoom level tracked by the plugin is the pinch-zoom level, and not the text-zoom level\n* Rather than being progressively rendered as needed, hidden item are rendered with zero opacity. Which means that they can still be interacted with\n\nThis is really just a proof of concept to allow the user experience to be evaluated. A production version would need to work in all browsers, which would mean adopting a polyfill such as [[Hammer.js|http://hammerjs.github.io/]] to give us manual pan and zoom support. It would also allow deeper levels of zoom.\n\n<<<\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/evernote",
+        "name": "Evernote",
+        "description": "Evernote migration tools",
+        "list": "readme docs",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin contains tool to assist migration of content from Evernote ENEX files.\n\n!! Instructions\n\n# Download or save your ENEX file from Evernote\n## Use [ext[evernote-backup|https://github.com/vzhd1701/evernote-backup]] to export ENEX file with resource hash, so images can be linked in the note\n# Rename the file to have an `.enex` extension\n# Drag the file into the TiddlyWiki browser window\n## Alternatively, click the \"Import\" button in the \"Tools\" sidebar tab\n# Review and accept the converted tiddlers\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/external-attachments",
+        "name": "External Attachments",
+        "description": "External attachments for TiddlyDesktop",
+        "list": "readme settings",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "! Introduction\n\nThis plugin provides support for importing tiddlers as external attachments. That means that instead of importing binary files as self-contained tiddlers, they are imported as \"skinny\" tiddlers that reference the original file via the ''_canonical_uri'' field. This reduces the size of the wiki and thus improves performance. However, it does mean that the wiki is no longer fully self-contained.\n\n! Compatibility\n\nThis plugin only works when using TiddlyWiki with platforms such as TiddlyDesktop that support the ''path'' attribute for imported/dragged files.\n\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/filesystem",
+        "name": "Filesystem",
+        "description": "Synchronize changes from the node.js server to the local filesystem",
+        "list": "readme",
+        "platform": "server",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "The filesystem plugin is used under Node.js to synchronise tiddler changes back to the file system. It is inert when used in the browser.\n\n[[Source code|https://github.com/TiddlyWiki/TiddlyWiki5/blob/master/plugins/tiddlywiki/filesystem]]\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/freelinks",
+        "name": "Freelinks",
+        "description": "Freelinking of tiddler titles",
+        "list": "readme settings",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin adds automatic generation of links to tiddler titles.\n\nThe plugin uses the Aho-Corasick algorithm for efficient pattern matching with large numbers of tiddlers.\n\n!! Configuration\n\nFreelinking is activated for runs of text that have the following variables set:\n\n* `tv-wikilinks` is NOT equal to `no`\n* `tv-freelinks` is set to `yes`\n\nFreelinks are case sensitive by default but can be configured to ignore case in the settings panel.\n\nWord boundary checking can be configured in the settings panel. When enabled (default for Western languages), links are created only for complete words. When disabled, partial matches within words are also linked.\n\nWhen multiple tiddler titles match the same text, longer titles take precedence over shorter ones.\n\nTiddlers do not create links to themselves.\n\nUse `$:/config/Freelinks/TargetFilter` to define which tiddlers are eligible for auto-linking.\n\nWithin view templates, the variable `tv-freelinks` is automatically set to the content of `$:/config/Freelinks/Enable`, which can be set via the settings panel of this plugin.\n\nUse `$:/config/Freelinks/MaxLinks` to set the maximum number of links rendered per text node (default: 500). \n\nSince TiddlyWiki splits tiddler content into multiple text nodes, the effective limit per tiddler is higher than this value. Text beyond the limit remains as plain text rather than being silently dropped. This cap protects against DOM overload when a large number of tiddler titles match the text, for example in dictionary-scale wikis. Raising this value significantly increases render time.\n\n!! Notes\n\nTo change within which tiddlers freelinking occurs requires customising the shadow tiddler [[$:/plugins/tiddlywiki/freelinks/macros/view]]. This tiddler is tagged `$:/tags/Macro/View` which means that it will be included as a local macro in each view template. By default, its content is:\n\n```\n<$set name=\"tv-freelinks\" value={{$:/config/Freelinks/Enable}}/>\n```\n\nThat means that for each tiddler the variable `tv-freelinks` will be set to the tiddler `$:/config/Freelinks/Enable`, which is set to \"yes\" or \"no\" by the settings in control panel.\n\nInstead, we can use a filter expression to, say, only freelink within the tiddler with the title \"HelloThere\":\n\n```\n<$set name=\"tv-freelinks\" value={{{ [<currentTiddler>match[HelloThere]then[yes]else[no]] }}}/>\n```\n\nOr, we can make a filter that will only freelink within tiddlers with the tag \"MyTag\":\n\n```\n<$set name=\"tv-freelinks\" value={{{ [<currentTiddler>tag[MyTags]then[yes]else[no]] }}}/>\n```\n\nOr we can combine both approaches:\n\n```\n<$set name=\"tv-freelinks\" value={{{ [<currentTiddler>match[HelloThere]] ~[<currentTiddler>tag[MyTag]] +[then[yes]else[no]] }}}/>\n```\n\n!! Implementation Details\n\nThe Aho-Corasick algorithm implementation includes:\n\n* Unicode character support for international text\n* Prevention of self-referential links within the current tiddler\n* Uses a `WeakMap` for failure links, required for correct object-keyed traversal\n* Merges pattern outputs at build time for efficient single-pass search\n* Converts case per character during search to avoid Unicode index desync (e.g. Turkish İ, German ß)\n* Runs search to completion without truncation; the `MaxLinks` cap is applied at render time so that the longest-match selection always has full information and text beyond the cap is preserved as plain text rather than silently dropped\n* Graceful fallback handling for invalid patterns\n* Skips draft tiddlers and system tiddlers (`$:/`) during cache invalidation to avoid unnecessary rebuilds on UI interactions\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/geospatial",
+        "name": "Geospatial Utilities",
+        "description": "Geospatial utilities",
+        "list": "readme docs settings license",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "Welcome to the Geospatial Plugin for TiddlyWiki.\n\nThis plugin adds new primitives to the TiddlyWiki platform to enable non-developers to build sophisticated interactive geospatial applications.\n\nThe Geospatial Plugin incorporates a number of third party libraries and online services:\n\n* [[Leaflet.js|https://leafletjs.com/]], an open source library to display interactive maps\n* [[Turf.js|https://turfjs.org/]], an open source library to perform geospatial calculations with [[GeoJSON|https://en.wikipedia.org/wiki/GeoJSON]] objects\n* [[TravelTime|https://traveltime.com/]], a commercial API for [[geocoding|https://traveltime.com/features/geocoding]], [[routing|https://traveltime.com/features/multi-modal-routing]] and [[isochrones|https://traveltime.com/features/isochrones]]\n* [[Flickr|https://www.flickr.com/services/api/]], a free API for retrieving geotagged photographs\n* [[OpenLocationCode|https://github.com/google/open-location-code]], Google's open source library for converting to and from Open Location Codes (also known as [[PlusCodes|https://maps.google.com/pluscodes/]])\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/github-fork-ribbon",
+        "name": "GitHub Fork Ribbon",
+        "description": "GitHub-inspired corner ribbon",
+        "author": "Simon Whitaker",
+        "list": "readme usage",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin provides a diagonal ribbon across the corner of the window. It resembles the design used by ~GitHub for their \"Fork me on ~GitHub\" ribbons.\n\nThe ribbon can be positioned over any corner, and can incorporate user defined text, colours and a link.\n\nThe CSS stylesheet is adapted from work by [[Simon Whitaker|https://github.com/simonwhitaker/github-fork-ribbon-css/]]\n\n[[Plugin source code|https://github.com/TiddlyWiki/TiddlyWiki5/blob/master/plugins/tiddlywiki/github-fork-ribbon]]\n",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/googleanalytics",
+        "name": "Google Analytics",
+        "description": "Website visitor statistics from Google",
+        "contributor": "Sylvain Comte",
+        "list": "readme settings usage",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin enables you to use Google Analytics to track access to your online TiddlyWiki document.\n\nBy default, the user is not asked for permission before initialising Google Analytics. This plugin also optionally integrates with the \"Consent Banner\" plugin (also found in the official plugin library) so that Google Analytics is not initialised until the user grants explicit permission.\n\n[[Source code|https://github.com/TiddlyWiki/TiddlyWiki5/blob/master/plugins/tiddlywiki/googleanalytics]]\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/help",
+        "name": "Help",
+        "description": "Floating help panel",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin provides an overlay help panel at the bottom right of the window.\n\n[[Source code|https://github.com/TiddlyWiki/TiddlyWiki5/blob/master/plugins/tiddlywiki/help]]\n",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/highlight",
+        "name": "Highlight",
+        "description": "Highlight.js syntax highlighting",
+        "author": "Joao Bolila",
+        "list": "readme usage license",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "\\define highlightVersion() 11.11.1\n\nThis plugin provides syntax highlighting of code blocks using version <<highlightVersion>> of [[highlight.js|https://github.com/isagalaev/highlight.js]] from Ivan Sagalaev. This plugin does not work on browsers that do not fully support ~JavaScript ES6 (2015). If you need highlight.js running on those legacy browsers, you would need to install the \"Highlight (Legacy)\" plugin instead. Here's a [[ES6 compatibility table|https://caniuse.com/?search=es6]].\n\n! Built-in Language Brushes\n\nThe plugin includes support for the following common languages (referred to as \"brushes\" by highlight.js):\n\n* bash\n* c\n* cpp\n* csharp\n* css\n* diff\n* go\n* html, xml\n* java\n* javascript\n* json\n* kotlin\n* less\n* lua\n* makefile\n* markdown\n* objectivec\n* perl\n* php\n* plaintext\n* python\n* R\n* ruby\n* rust\n* scss\n* sql\n* shell session\n* swift\n* toml, ini\n* typescript\n* visual basic .net\n* yaml\n\nAnd these additional ones:\n\n* apache config\n* dockerfile\n* fortran\n* latex\n* nginx config\n\nThe mapping between a MIME type and a highlight.js language specifier is accomplished via mapping tiddlers whose titles start with `$:/config/HighlightPlugin/TypeMappings/`.\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/innerwiki",
+        "name": "Innerwiki",
+        "description": "Innerwikis for screenshots and hacking",
+        "list": "readme docs examples",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "!! Introduction\n\nThis plugin enables TiddlyWiki to embed a modified copy of itself (an \"innerwiki\") with overlaid graphics. The primary motivation is to be able to produce screenshot illustrations that are automatically up-to-date with the appearance of TiddlyWiki as it changes over time, or to produce the same screenshot in different languages.\n\nIn the browser, innerwikis are displayed as an embedded iframe. Under Node.js [[Google's Puppeteer|https://pptr.dev/]] is used to load the innerwikis as off-screen web pages and then snapshot them as a PNG image.\n\n!! Warnings\n\nThe `<$innerwiki>` widget is relatively slow and resource intensive: each time it is refreshed it will entirely rebuild the iframe containing the innerwiki.\n\nThe `<$innerwiki>` widget does not automatically resize with its container (for example, try hiding the sidebar in this wiki).\n\n!! Prequisites\n\nIn order to take screenshots under Node.js, Google Puppeteer must first be installed from [[npm|https://npmjs.org//]]. For most situations, it should be installed at the root of the TiddlyWiki 5 repo:\n\n```\ncd Jermolene/TiddlyWiki5\nnpm install puppeteer\n```\n\nHowever, if you're working in a different repo that uses npm to install TiddlyWiki 5 then you should install Puppeteer into the same repo. The general rule is that the `node_modules` folder containing Puppeteer should be contained within an ancestor of the folder containing TiddlyWiki's `tiddlywiki.js` file.\n\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/internals",
+        "name": "Internals",
+        "description": "Tools for exploring the internals of TiddlyWiki",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin adds features to help explore the internals of TiddlyWiki:\n\n* New preview panes showing:\n** the parse tree\n** the widget tree\n** the raw HTML output\n\nThe first two include a dropdown for choosing block vs. inline parsing mode.\n",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/jszip",
+        "name": "JSZip",
+        "description": "JSZip library",
+        "author": "Stuart Knightley, David Duponchel, Franz Buchinger, António Afonso",
+        "list": "readme docs examples license",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin provides primitives for working with Zip files. It also makes the [[JSZip|https://stuk.github.io/jszip/]] library available for use by other plugins.\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/katex",
+        "name": "KaTeX",
+        "description": "KaTeX library for mathematical typography",
+        "list": "readme usage config",
+        "library-version": "v0.15.3",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This is a TiddlyWiki plugin for mathematical and chemical typesetting based on [ext[KaTeX from Khan Academy|https://katex.org/]] (v0.16.28) and [ext[mhchem|https://github.com/mhchem/MathJax-mhchem]] through a [ext[Katex extension|https://github.com/KaTeX/KaTeX/tree/master/contrib/mhchem]].\n\nIt is completely self-contained, and doesn't need an Internet connection in order to work. It works both in the browser and under Node.js.\n\n[[Source code|https://github.com/TiddlyWiki/TiddlyWiki5/blob/master/plugins/tiddlywiki/katex]]\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/markdown",
+        "name": "Markdown",
+        "description": "Markdown parser based on markdown-it",
+        "list": "readme settings syntax license",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin provides Markdown support via the [[markdown-it|https://github.com/markdown-it/markdown-it]] parser and its associated plugins:\n\n* markdown-it-deflist\n* markdown-it-footnote\n* markdown-it-ins\n* markdown-it-mark\n* markdown-it-sub\n* markdown-it-sup\n\n!! Compatibility Notes\n\n* <p>A tab character in Markdown has a size of four spaces. Configure the tab size of your code editor accordingly. For example, if you use <$text text=\"CodeMirror\"/>, it is recommended that you set $:/config/codemirror/indentUnit and $:/config/codemirror/tabSize to `4` to avoid inconsistent indentations.</p>\n* <p>HTML blocks are ultimately parsed by the <$text text=WikiText/> parser: //an opening tag followed by a blank line will activate block-level parsing for its content//. When working with tags designed to contain literal content, such as `<pre>` and `<style>` tags, refrain from adding blank lines after the opening tags.</p>\n* <p>You must terminate a table with either a blank line or another block-level structure.</p>\n* <p>`latex-parser` in $:/config/markdown/renderWikiTextPragma is no longer required and will be ignored.</p>\n* <p>Config option `linkNewWindow` is removed.</p>\n\n!! Extending the Parser\n\nYou can extend the parser by loading additional markdown-it plugins this way:\n\n```js\nvar plugin1 = require(...);\nvar plugin2 = require(...);\n\nvar md = $tw.Wiki.parsers[\"text/markdown\"].prototype.md;\n\nmd.use(plugin1)\n  .use(plugin2, opts, ...);\n```\n\n! Plugin Configuration\n\n<h2 style=\"margin-top:1.5em\">~WikiText Pragma</h2>\n\nThe value of [[renderWikiTextPragma|$:/config/markdown/renderWikiTextPragma]] has been carefully tuned to properly integrate markdown with ~TiddlyWiki. Changing this setting may produce unexpected results, but the inclusion of the following parser rules should be fine:\n\n; image\n: embed images using ~TiddlyWiki's image syntax:\n\n<p style=\"margin-left:1em\">\n\n```\n[img[An explanatory tooltip|TiddlerTitle]]\n\n[img width=23 class=\"tc-image\" [https://tiddlywiki.com/fractalveg.jpg]]\n```\n</p>\n\n; prettylink\n: create links the ~TiddlyWiki way:\n\n<p style=\"margin-left:1em\">\n\n```\n[[TiddlerTitle]]\n\n[[Displayed Link Title|Tiddler Title]]\n\n[[TW5|https://tiddlywiki.com/]]\n```\n</p>\n\n; prettyextlink\n: create external links using the following syntax:\n\n<p style=\"margin-left:1em\">\n\n```\n[ext[Open file|index.html]]\n\n[ext[Open file|../README.md]]\n```\n</p>\n\n; wikilink\n: auto-link ~CamelCase titles\n\n; syslink\n: auto-link system tiddlers\n\n<h2 style=\"margin-top:1.5em\">Typographical Replacements</h2>\n\nWhen [[typographer|$:/config/markdown/typographer]] is enabled, markdown-it will provide these typographical replacements:\n\n```\n(c) (C)   → ©\n(tm) (TM) → ™\n(r) (R)   → ®\n+-        → ±\n...       → …\n?....     → ?..\n!....     → !..\n?????     → ???\n!!!!!     → !!!\n,,        → ,\n--        → &ndash;\n---       → &mdash;\n```\n\n! Making Markdown the Default in TiddlyWiki\n\n!! Modifying Existing Actions\n\nAdding `type=\"text/markdown\"` to the actions of the following buttons will\noverride the default behavior.\n\n* New Journal - $:/core/ui/Actions/new-journal\n* New Tiddler Here - $:/core/ui/Buttons/new-here\n* New Tiddler - $:/core/ui/Actions/new-tiddler\n\n!! Using Markdown for Missing Links\n\nBy default, missing tiddlers are created with a blank content type, which\nimplies WikiText. Setting [[$:/config/DefaultMissingType]] to `text/markdown`\nwill make it so that tiddlers created from a missing tiddler link will be in\nMarkdown rather than in WikiText.\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/markdown-legacy",
+        "name": "Markdown (Legacy)",
+        "description": "Markdown parser based on remarkable by Jon Schlinkert and remarkable-katex by Brad Howes",
+        "list": "readme usage remarkable-license remarkable-katex-license",
+        "stability": "STABILITY_3_LEGACY",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This is a TiddlyWiki plugin for parsing Markdown text, using the [[Remarkable|https://github.com/jonschlinkert/remarkable]] library. If the KaTeX TiddlyWiki plugin is installed, KaTeX support is enabled using the [[remarkable-katex|https://github.com/bradhowes/remarkable-katex]] Remarkable plugin.\n\nIt is completely self-contained, and doesn't need an Internet connection in order to work. It works both in the browser and under Node.js.\n\n[[Source code|https://github.com/TiddlyWiki/TiddlyWiki5/blob/master/plugins/tiddlywiki/markdown-legacy]]\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/menubar",
+        "name": "Menu Bar",
+        "description": "Menu Bar",
+        "list": "readme config",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "!! Introduction\n\nThis plugin provides a menu bar with the following features:\n\n* Menu items take the form of simple text links, dropdowns, or entirely custom content\n* Menu items can be individually enabled via the control panel\n* Responds to reduced screen width by abbreviating the menu items to a \"hamburger\" dropdown\n\n!! Menu Item Tiddlers\n\nMenu items are tagged <<tag $:/tags/MenuBar>>. The following fields are used by this plugin:\n\n|!Field Name |!Purpose |\n|title |Each menu item must have a unique title (not shown to the user) |\n|description |Description for use in listings |\n|tags |Must contain `$:/tags/MenuBar` |\n|caption |The text that is displayed for the menu item. Avoid links, using `~` to suppress CamelCase links if required |\n|target |For simple link menu items specifies a tiddler title as the target of the link |\n|is-dropdown |Set to `yes` to indicate a dropdown menu item |\n|dropdown-position |Optional position for the dropdown (can be ''left'', ''above'', ''aboveleft'', ''aboveright'', ''right'', ''belowleft'', ''belowright'' or ''below'') |\n|text |For dropdown menu items, specifies the body of the dropdown |\n|custom-menu-content |Optional wikitext to be displayed in place of the caption |\n|custom-menu-styles-wide |Optional string of styles to be applied to menu item when the menubar is wide |\n|custom-menu-styles-narrow |Optional string of styles to be applied to menu item when the menubar is narrow |\n\nCustom menu items should make sure that the clickable link or button is an immediate child, and not wrapped in another element.\n\nNote that menu items can be pushed to the right of the menu bar setting the ''custom-menu-styles'' field to `float: right;`.\n",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/powered-by-tiddlywiki",
+        "name": "Powered By TiddlyWiki",
+        "description": "Powered by TiddlyWiki banner",
+        "list": "readme",
+        "stability": "STABILITY_3_LEGACY",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin adds a \"Powered by ~TiddlyWiki\" banner that links back to https://tiddlywiki.com\n\nIt's very basic at the moment, but the plan is to improve it by making it more customisable.\n",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/qrcode",
+        "name": "QR Code",
+        "description": "QR Code generator",
+        "author": "Zeno Zeng",
+        "list": "readme docs examples license",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "The QR Code Plugin contains several features for working with QR codes and other types of barcode.\n\n* The ''makeqr'' macro enables any text to be rendered as a [[QR code|https://en.wikipedia.org/wiki/QR_code]]. QR codes are a type of 2-dimensional bar code that encodes arbitrary data: text, numbers, links. QR code readers are available or built-in for smartphones, making them a convenient means to transfer information between devices\n* The `<$barcodereader>` widget that enables barcodes to be decoded from the device camera or direct from an image file\n* A new toolbar button that can display several QR code renderings of the content of a tiddler:\n** Raw content\n** Rendered, formatted content\n** URL of tiddler\n\nThis plugin uses the following open source libraries:\n\n* [[qrcode.js by Zeno Zeng|https://github.com/zenozeng/node-yaqrcode]]\n* [[Html5-QRCode by Minhaz|https://github.com/mebjas/html5-qrcode]]\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/railroad",
+        "name": "Railroad",
+        "description": "Railroad diagram generator",
+        "author": "Astrid Elocson",
+        "list": "readme usage syntax example",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin provides a `<$railroad>` widget for generating railroad diagrams as SVG images.\n\nAlternatively, the [[diagram notation|$:/plugins/tiddlywiki/railroad/syntax]] can be stored in a dedicated tiddler with its `type` field set to `text/vnd.tiddlywiki.railroad`, and that tiddler can simply be transcluded to wherever it is needed.\n\nThe plugin is based on [[a library by Tab Atkins|https://github.com/tabatkins/railroad-diagrams]], and has been extended to make it more flexible, including allowing components of a diagram to function as links or be transcluded from other tiddlers.\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/savetrail",
+        "name": "Save Trail",
+        "description": "Automatically download modified tiddlers",
+        "list": "readme settings",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin causes TiddlyWiki to continuously download (as a JSON file) the contents of any tiddler that is manually changed by any of several means:\n\n* Confirming an edit\n* Deleting tiddlers\n* Imports\n* Renames/relinks\n* Optionally, typing in draft tiddlers can trigger a download\n\nWhere appropriate, separate 'before' and 'after' files are downloaded. Configured correctly, the browser will download the files silently in the background, and they can be used as a backup in case of accidental data loss.\n\n''CAUTION'': Using this plugin will generate a //lot// of files in your downloads folder! Some points to watch:\n\n* This plugin is pretty much unusable unless your browser is set up to download files automatically, without prompting for the location\n* Automatic file downloading doesn't work in all browsers - in particular, Safari and Internet Explorer do not currently support the [[necessary HTML5 feature|http://caniuse.com/download]]\n* Be aware of the privacy implications of leaving a plaintext trail of all of your edits. You should only enable this plugin on computers that your trust and with content that is not sensitive\n* The plugin uses the tiddler title plus a timestamp to generate a filename for the downloaded file, but some browsers ignore the specified title and generate their own title for each downloaded file\n\nOther points to note:\n\n* By default, after a draft tiddler has been modified the plugin waits until at least one second has elapsed since the last typing before it attempts to download the tiddler. This reduces the number of times that rapidly changing tiddlers are saved\n* This plugin can be used with both the single file HTML configuration and under Node.js because it is independent of the usual saving and syncing processes\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/sax",
+        "name": "sax js",
+        "description": "sax.js library",
+        "author": "Isaac Z. Schlueter",
+        "list": "readme license",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin packages [[sax.js|https://github.com/isaacs/sax-js]] for use by other plugins. It does not provide any end-user visible features.\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/share",
+        "name": "Share",
+        "description": "Sharing tiddlers via URLs",
+        "list": "readme wizard settings",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "<div class=\"tc-message-box\">Do not install this plugin unless you understand exactly what it does</div>\n\nThis experimental plugin provides tools to share tiddlers via URLs, comprising:\n\n* The ability to load a group of tiddlers from the browser location hash at startup\n* Wizard and templates to create URLs from group of tiddlers\n\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/stacked-view",
+        "name": "Stacked View",
+        "description": "Stacked card storyview",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin provides a new story visualisation that displays individual tiddlers as a stack of cards. It is currently experimental and incomplete.\n\n[[Source code|https://github.com/TiddlyWiki/TiddlyWiki5/blob/master/plugins/tiddlywiki/stacked-view]]\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/text-slicer",
+        "name": "Text Slicer",
+        "description": "Tools for slicing text into tiddlers",
+        "list": "readme docs",
+        "dependents": "$:/plugins/tiddlywiki/sax",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "type": "application/json",
+        "readme": "This plugin contains tools to help slice up long texts into individual tiddlers. It currently works directly with XHTML documents and with Microsoft Word compatible DOCX documents via conversion to HTML.\n\nIt is an expression of the philosophy of TiddlyWiki: that text is easier to re-use and work with if it is sliced up into separate chunks that can be independently manipulated, and then woven back together to make up stories and narratives for publication.\n\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/tiddlyweb",
+        "name": "TiddlyWeb",
+        "description": "Sync changes from the browser to TW5 (node.js) or TiddlyWeb server",
+        "list": "readme",
+        "plugin-priority": 10,
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin runs in the browser to synchronise tiddler changes to and from a TiddlyWeb-compatible server (including TiddlyWiki 5 itself, running on Node.js). It is inert when run under Node.js. Disabling this plugin via the browser can not be undone via the browser since this plugin provides the mechanism to synchronize settings with the server.\n\nChanges made while offline are saved in memory and automatically synchonised with the server when the connection is re-established. However, if the browser tab is closed or another URL is loaded, the in-memory changes will be lost. The [[https://tiddlywiki.com/#BrowserStorage Plugin]] may be added to provide temporary filesystem storage of tiddler changes made while offline and enable them to be synchronised with the server the next time the wiki is loaded in the same browser.  \n\n[[Source code|https://github.com/TiddlyWiki/TiddlyWiki5/blob/master/plugins/tiddlywiki/tiddlyweb]]\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/tour",
+        "name": "Tour",
+        "description": "A tour of TiddlyWiki",
+        "list": "readme docs settings",
+        "dependents": "$:/plugins/tiddlywiki/confetti $:/plugins/tiddlywiki/dynannotate",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "type": "application/json",
+        "readme": "The Tour Plugin for TiddlyWiki provides a framework for making interactive guided tours. An \"Introduction to ~TiddlyWiki\" tour is included in the plugin but it is also possible to load additional tours and switch between them.\n",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/tw2parser",
+        "name": "TW2 Parser",
+        "description": "TiddlyWiki Classic parser",
+        "author": "Jeffrey Wilkinson",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This experimental plugin provides support for parsing and rendering tiddlers written in TiddlyWiki Classic format (`text/x-tiddlywiki`).\n\n[[Source code|https://github.com/TiddlyWiki/TiddlyWiki5/blob/master/plugins/tiddlywiki/tw2parser]]\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/tw5.com-docs",
+        "name": "TW5.com Docs",
+        "description": "Documentation from tiddlywiki.com",
+        "list": "readme",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This is an experimental packaging of the documentation from tiddlywiki.com into a plugin.\n\nIt is currently not fully functional:\n\n* Listings of tiddlers don't always work because the docs tiddlers are now shadow tiddlers\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/twitter",
+        "name": "Twitter",
+        "description": "Twitter embedding tools",
+        "list": "readme usage",
+        "stability": "STABILITY_3_LEGACY",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin provides a `<$twitter>` widget that can embed various entities from Twitter's service:\n\n* Individual tweets and conversations\n* Buttons for tweeting/mentioning, sharing, following\n* Various types of timeline: profile, likes, list, collection, url and widget\n\nThe widget only works in the browser, and not in generated static HTML pages.\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/twitter-archivist",
+        "name": "Twitter Archivist",
+        "description": "Twitter archiving tools",
+        "list": "readme usage spec todo",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "! Introduction\n\nThe Twitter Archivist imports the tweets and associated media from a [[Twitter Archive|https://help.twitter.com/en/managing-your-account/how-to-download-your-twitter-archive]] as individual tiddlers.\n\nThe first step is to request your Tweet archive from Twitter. Once it is available, download file compressed file and unzip it.\n\n! Installation\n\nFor browser-based wikis, drag and drop this link to install the Twitter Archivist plugin in your own wikis (note that a reload will be required after installing the plugin and saving the wiki):\n\n{{$:/plugins/tiddlywiki/twitter-archivist||$:/core/ui/Components/plugin-info}}\n\nFor Node.js-based wikis, add `tiddlywiki/twitter-archivist` to the `plugin` section of `tiddlywiki.info`:\n\n```\n...\n\t\"plugins\": [\n\t\t\"tiddlywiki/twitter-archivist\"\n\t],\n...\n```\n\n! Limitations of Twitter Archives\n\nThe Twitter Archive format itself has many shortcomings which affect this tool:\n\n* Retweets come through as old-school RTs, which means that they are often truncated\n* Likes only have minimal information, lacking date, author and mentions\n* Twitter archives can be delivered in multiple parts, but this tool has only been tested with single archives. It is hoped that cumulatively importing each of the archives in turn should work\n\nA future version of this tool may use the Twitter API to get around these restrictions.\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/wikitext-serialize",
+        "name": "WikitextSerialize",
+        "description": "Serialize wikitext abstract syntax tree back to wikitext format",
+        "list": "readme",
+        "stability": "STABILITY_1_EXPERIMENTAL",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/xlsx-utils",
+        "name": "XLSX Utils",
+        "description": "XLSX spreadsheet utilities",
+        "list": "readme controls license",
+        "dependents": "$:/plugins/tiddlywiki/jszip",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "type": "application/json",
+        "readme": "This plugin provides a flexible way to import tiddlers from Excel files. It is based on the library [[js-xlsx|https://github.com/SheetJS/js-xlsx]].\n\nThe plugin uses //import specifications// to determine how incoming spreadsheets are processed. You can view, create and edit import specifications in the control panel \"XLSX Utilities\" tab, or directly in the [[plugin controls|$:/plugins/tiddlywiki/xlsx-utils]]. This is also where you select which import specification is selected for use during the next import operation.\n\nEach sheet is expected to consist of a single header row followed by multiple content rows, each consisting of an independent record. The plugin automatically detects the extent of each sheet by looking for the bottom right cell that contains a value. This can lead to unexpected results if a cell is accidentally created with an invisible, blank value.\n\nImport specifications describe how tiddlers are created from a particular row of a sheet; multiple tiddlers can be generated from a single row. (Conversely, if different rows yield tiddlers with the same title then they will overwrite one another).\n\nEach field of each tiddler can be assigned a constant value, or a value taken from a named column of the sheet, optionally with a prefix and/or suffix added. There is special support for handling list fields (like the tags field), with the ability to append new items to the list.\n\nInternally, each import specifier is actually modelled as a hierarchy of connected tiddlers with the field ''import-spec-role'' indicating the following roles:\n\n* ''workbook'': describes the sheets to be imported from the workbook\n* ''sheet'': describes each sheet to be processed\n* ''row'': describes the tiddlers to be imported from each row of each sheet\n* ''field'': describes the fields to be assigned to each tiddler from each row of each sheet\n\nThe easiest way to understand the structure is to explore the example import specifications, and the corresponding spreadsheets they are designed to handle.\n\nNote that there are many possible different ways of importing a particular spreadsheet, depending on whether the structures are modelled with fields, tags, prefixes or other mechanisms. The plugin is designed to support a wide range of applications.\n\nThis plugin also requires the JSZip plugin ([[$:/plugins/tiddlywiki/jszip]]) to be installed.\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/plugins/tiddlywiki/xmldom",
+        "name": "xmldom",
+        "description": "xmldom library",
+        "list": "readme license",
+        "stability": "STABILITY_2_STABLE",
+        "version": "5.4.1",
+        "plugin-type": "plugin",
+        "dependents": "",
+        "type": "application/json",
+        "readme": "This plugin packages [[xmldom|https://github.com/jindw/xmldom]] for use by other plugins. It does not provide any end-user visible features.\n",
+        "requires-reload": "yes"
+    },
+    {
+        "title": "$:/themes/tiddlywiki/centralised",
+        "name": "Centralised",
+        "author": "JeremyRuston",
+        "core-version": ">=5.0.0",
+        "plugin-type": "theme",
+        "description": "Centralises the story river",
+        "dependents": "$:/themes/tiddlywiki/snowwhite",
+        "version": "5.4.1",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/themes/tiddlywiki/heavier",
+        "name": "Heavier",
+        "author": "JeremyRuston",
+        "core-version": ">=5.0.0",
+        "plugin-type": "theme",
+        "description": "Heavier font theme",
+        "dependents": "$:/themes/tiddlywiki/snowwhite",
+        "version": "5.4.1",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/themes/tiddlywiki/readonly",
+        "name": "ReadOnly",
+        "author": "JeremyRuston",
+        "core-version": ">=5.0.0",
+        "plugin-type": "theme",
+        "description": "Hides the ability to edit tiddlers",
+        "dependents": "$:/themes/tiddlywiki/snowwhite",
+        "version": "5.4.1",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/themes/tiddlywiki/seamless",
+        "name": "Seamless",
+        "author": "JeremyRuston",
+        "core-version": ">=5.0.0",
+        "plugin-type": "theme",
+        "description": "Removes borders from tiddlers",
+        "dependents": "$:/themes/tiddlywiki/vanilla",
+        "version": "5.4.1",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/themes/tiddlywiki/snowwhite",
+        "name": "Snow White",
+        "author": "JeremyRuston",
+        "core-version": ">=5.0.0",
+        "plugin-type": "theme",
+        "description": "Emphasises individual tiddlers",
+        "dependents": "$:/themes/tiddlywiki/vanilla",
+        "plugin-priority": "0",
+        "version": "5.4.1",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/themes/tiddlywiki/starlight",
+        "name": "Starlight",
+        "author": "JeremyRuston",
+        "core-version": ">=5.0.0",
+        "plugin-type": "theme",
+        "description": "Example alternative theme",
+        "dependents": "$:/themes/tiddlywiki/snowwhite",
+        "version": "5.4.1",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/themes/tiddlywiki/tight",
+        "name": "Tight",
+        "author": "JeremyRuston",
+        "core-version": ">=5.0.0",
+        "plugin-type": "theme",
+        "description": "Tightly packed theme",
+        "dependents": "$:/themes/tiddlywiki/vanilla",
+        "version": "5.4.1",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/themes/tiddlywiki/tight-heavier",
+        "name": "Tight and Heavier",
+        "author": "JeremyRuston",
+        "core-version": ">=5.0.0",
+        "plugin-type": "theme",
+        "description": "Tight and Heavier font theme",
+        "dependents": "$:/themes/tiddlywiki/tight $:/themes/tiddlywiki/heavier",
+        "version": "5.4.1",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/themes/tiddlywiki/vanilla",
+        "name": "Vanilla",
+        "author": "JeremyRuston",
+        "core-version": ">=5.0.0",
+        "plugin-type": "theme",
+        "description": "Basic theme",
+        "plugin-priority": "0",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/ar-PS",
+        "name": "ar-PS",
+        "plugin-type": "language",
+        "description": "العربية (فلسطين)",
+        "author": "Kamal-Habash",
+        "core-version": ">=5.1.23",
+        "text-direction": "rtl",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/ca-ES",
+        "name": "ca-ES",
+        "plugin-type": "language",
+        "description": "Català (Espanya)",
+        "author": "Paco Rivière",
+        "core-version": ">=5.0.0",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/cs-CZ",
+        "name": "cs-CZ",
+        "plugin-type": "language",
+        "description": "Čeština (Česká republika)",
+        "author": "Zdeněk Jašek",
+        "core-version": ">=5.0.0",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/da-DK",
+        "name": "da-DK",
+        "plugin-type": "language",
+        "description": "Dansk (Danmark)",
+        "author": "Birthe C",
+        "core-version": ">=5.0.8",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/de-AT",
+        "name": "de-AT",
+        "plugin-type": "language",
+        "description": "Deutsch (Österreich)",
+        "author": "MarioPietsch aka pmario",
+        "core-version": ">=5.0.0",
+        "dependents": "$:/languages/de-DE",
+        "plugin-priority": 110,
+        "version": "5.4.1",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/de-CH",
+        "name": "de-CH",
+        "plugin-type": "language",
+        "description": "Deutsch (Schweiz)",
+        "author": "MarioPietsch aka pmario",
+        "core-version": ">=5.0.0",
+        "dependents": "$:/languages/de-DE",
+        "plugin-priority": 110,
+        "version": "5.4.1",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/de-DE",
+        "name": "de-DE",
+        "plugin-type": "language",
+        "description": "Deutsch (Deutschland)",
+        "author": "MarioPietsch aka pmario",
+        "core-version": ">=5.0.0",
+        "plugin-priority": 100,
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/el-GR",
+        "name": "el-GR",
+        "plugin-type": "language",
+        "description": "Ελληνικά (Ελλάδα)",
+        "author": "Stratis Aravias@ΓΕΛ Σαμοθράκης",
+        "core-version": ">=5.0.0",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/en-PH",
+        "name": "en-PH",
+        "plugin-type": "language",
+        "description": "English (Philippines)",
+        "author": "JC John Sese Cuneta",
+        "core-version": ">=5.3.5",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/en-US",
+        "name": "en-US",
+        "plugin-type": "language",
+        "description": "English (US)",
+        "author": "Ben Webber",
+        "core-version": ">=5.0.0",
+        "dependents": "$:/languages/en-GB",
+        "plugin-priority": 110,
+        "version": "5.4.1",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/es-ES",
+        "name": "es-ES",
+        "plugin-type": "language",
+        "description": "Castellano. (España)",
+        "author": "Pau DeLuca,Joe Bordes",
+        "core-version": ">=5.3",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/fa-IR",
+        "name": "fa-IR",
+        "plugin-type": "language",
+        "description": "فارسی (ایران)",
+        "author": "amirography",
+        "core-version": ">=5.0.0",
+        "text-direction": "rtl",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/fr-FR",
+        "name": "fr-FR",
+        "plugin-type": "language",
+        "description": "Français (France)",
+        "author": "xcazin",
+        "core-version": ">=5.0.0",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/he-IL",
+        "name": "he-IL",
+        "plugin-type": "language",
+        "description": "עברית (ישראל)",
+        "author": "DoronTzur",
+        "core-version": ">=5.0.0",
+        "text-direction": "rtl",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/hi-IN",
+        "name": "hi-IN",
+        "plugin-type": "language",
+        "description": "हिन्दी (भारत)",
+        "author": "Atul Grover",
+        "core-version": ">=5.0.8",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/ia-IA",
+        "name": "ia-IA",
+        "plugin-type": "language",
+        "description": "Interlingua (Interlingua)",
+        "author": "Thomas Breinstrup",
+        "core-version": ">=5.0.8",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/it-IT",
+        "name": "it-IT",
+        "plugin-type": "language",
+        "description": "Italiano (Italia)",
+        "author": "MaurizioPollio",
+        "core-version": ">=5.0.8",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/ja-JP",
+        "name": "ja-JP",
+        "plugin-type": "language",
+        "description": "日本語 (日本)",
+        "author": "Makoto Hirohashi, OGOSHI Masayuki, pekopeko1, dajya-ranger.com, BALLOON | FU-SEN (Keiichi Shiga)",
+        "core-version": ">=5.1.4",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/ko-KR",
+        "name": "ko-KR",
+        "plugin-type": "language",
+        "description": "한국어 (대한민국)",
+        "author": "Myeongjin",
+        "core-version": ">=5.1.4",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/mk-MK",
+        "name": "mk-MK",
+        "plugin-type": "language",
+        "description": "Македонски (Македонија)",
+        "author": "Nikola Dio Petkovski",
+        "core-version": ">=5.1.4",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/nl-NL",
+        "name": "nl-NL",
+        "plugin-type": "language",
+        "description": "Nederlands (Nederland)",
+        "author": "gernert",
+        "core-version": ">=5.1.5",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/pa-IN",
+        "name": "pa-IN",
+        "plugin-type": "language",
+        "description": "ਪੰਜਾਬੀ (ਭਾਰਤ)",
+        "author": "Atul Grover",
+        "core-version": ">=5.0.8",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/pl-PL",
+        "name": "pl-PL",
+        "plugin-type": "language",
+        "description": "Polski (Polska)",
+        "author": "Maurycy Zarzycki (Evidently Cube)",
+        "core-version": ">=5.2.0",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/pt-BR",
+        "name": "pt-BR",
+        "plugin-type": "language",
+        "description": "Português (Brasil)",
+        "author": "Mauricio Lucas",
+        "core-version": ">=5.1.14",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/pt-PT",
+        "name": "pt-PT",
+        "plugin-type": "language",
+        "description": "Português (Portugal)",
+        "author": "Duarte Farrajota Ramos",
+        "core-version": ">=5.0.8",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/ru-RU",
+        "name": "ru-RU",
+        "plugin-type": "language",
+        "description": "Русский (Россия)",
+        "author": "AndreyYankin aka andrey013, Глеб Прохожев <glebujka@gmail.com>",
+        "core-version": ">=5.0.0",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/sk-SK",
+        "name": "sk-SK",
+        "plugin-type": "language",
+        "description": "Slovenčina (Slovensko)",
+        "author": "Vlado Luknar",
+        "core-version": ">=5.0.0",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/sl-SI",
+        "name": "sl-SI",
+        "plugin-type": "language",
+        "description": "Slovenščina (Slovenija)",
+        "author": "Tomaž Ficko",
+        "core-version": ">=5.0.0",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/sv-SE",
+        "name": "sv-SE",
+        "plugin-type": "language",
+        "description": "Svenska (Sverige)",
+        "author": "SuperDOS",
+        "core-version": ">=5.1.0",
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/zh-CN",
+        "name": "zh-CN",
+        "plugin-type": "language",
+        "description": "简体中文 (中国)",
+        "author": "BramChen",
+        "core-version": ">=5.0.8",
+        "dependents": "$:/languages/zh-Hans",
+        "plugin-priority": 110,
+        "version": "5.4.1",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/zh-HK",
+        "name": "zh-HK",
+        "plugin-type": "language",
+        "description": "繁體中文 (香港)",
+        "author": "BramChen",
+        "core-version": ">=5.0.8",
+        "dependents": "$:/languages/zh-Hant",
+        "plugin-priority": 110,
+        "version": "5.4.1",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/zh-Hans",
+        "name": "zh-Hans",
+        "plugin-type": "language",
+        "description": "简体中文",
+        "author": "BramChen",
+        "core-version": ">=5.0.8",
+        "plugin-priority": 100,
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/zh-Hant",
+        "name": "zh-Hant",
+        "plugin-type": "language",
+        "description": "繁體中文",
+        "author": "BramChen",
+        "core-version": ">=5.0.8",
+        "plugin-priority": 100,
+        "version": "5.4.1",
+        "dependents": "",
+        "type": "application/json",
+        "requires-reload": "no"
+    },
+    {
+        "title": "$:/languages/zh-TW",
+        "name": "zh-TW",
+        "plugin-type": "language",
+        "description": "繁體中文 (台灣)",
+        "author": "BramChen",
+        "core-version": ">=5.0.8",
+        "dependents": "$:/languages/zh-Hant",
+        "plugin-priority": 110,
+        "version": "5.4.1",
+        "type": "application/json",
+        "requires-reload": "no"
+    }
+];
+
+/*\
+title: $:/plugins/tiddlywiki/pluginlibrary/libraryserver.js
+type: application/javascript
+module-type: library
+
+A simple HTTP-over-window.postMessage implementation of a standard TiddlyWeb-compatible server. It uses real HTTP to load the individual tiddler JSON files.
+
+\*/
+
+"use strict";
+
+// Listen for window messages
+window.addEventListener("message",function listener(event){
+	console.log("plugin library: Received message from",event.origin);
+	console.log("plugin library: Message content",event.data);
+	switch(event.data.verb) {
+		case "GET":
+			if(event.data.url === "recipes/library/tiddlers.json") {
+				// Route for recipes/library/tiddlers.json
+				event.source.postMessage({
+					verb: "GET-RESPONSE",
+					status: "200",
+					cookies: event.data.cookies,
+					url: event.data.url,
+					type: "application/json",
+					body: JSON.stringify(assetList,null,4)
+				},"*");
+			} else if(event.data.url.indexOf("recipes/library/tiddlers/") === 0) {
+				var url = "recipes/library/tiddlers/" + encodeURIComponent(removePrefix(event.data.url,"recipes/library/tiddlers/"));
+				// Route for recipes/library/tiddlers/<uri-encoded-tiddler-title>.json
+				httpGet(url,function(err,responseText) {
+					if(err) {
+						event.source.postMessage({
+							verb: "GET-RESPONSE",
+							status: "404",
+							cookies: event.data.cookies,
+							url: event.data.url,
+							type: "text/plain",
+							body: "Not found"
+						},"*");
+					} else {
+						event.source.postMessage({
+							verb: "GET-RESPONSE",
+							status: "200",
+							cookies: event.data.cookies,
+							url: event.data.url,
+							type: "application/json",
+							body: responseText
+						},"*");
+					}
+				});
+			} else {
+				event.source.postMessage({
+					verb: "GET-RESPONSE",
+					status: "404",
+					cookies: event.data.cookies,
+					url: event.data.url,
+					type: "text/plain",
+					body: "Not found"
+				},"*");
+			}
+			break;
+	}
+},false);
+
+// Helper to remove string prefixes
+function removePrefix(string,prefix) {
+	if(string.indexOf(prefix) === 0) {
+		return string.substr(prefix.length);
+	} else {
+		return string;
+	}
+}
+
+// Helper for HTTP GET
+function httpGet(url,callback) {
+	var http = new XMLHttpRequest();
+	http.open("GET",url,true);
+	http.onreadystatechange = function() {
+		if(http.readyState == 4 && http.status == 200) {
+			callback(null,http.responseText);
+		}
+	};
+	http.send();
+}
+
+</script>
+</head>
+<body><h1>HelloThere</h1><p>This is the TiddlyWiki plugin library. It is not intended to be opened directly in the browser.</p><p>See <a href="https://tiddlywiki.com/" target="_blank">https://tiddlywiki.com/</a> for details of how to install plugins.</p></body>
+</html>
