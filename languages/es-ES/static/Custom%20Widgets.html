@@ -42,7 +42,7 @@ Custom Widgets
 </div>
 
 <div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div>
-</div><div class="tc-reveal"></div><div class="tc-reveal"><div class="tc-subtitle tc-clearfix">22 abril 2024 a las 8:47</div></div><div class="tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item">
+</div><div class="tc-reveal"></div><div class="tc-reveal"><div class="tc-subtitle tc-clearfix">7 agosto 2026 a las 19:05</div></div><div class="tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item">
 
 
 <button aria-expanded="false" class="tc-btn-invisible tc-tag-label" style="background-color:#FF8383;fill:#333333;color:#333333;">
@@ -104,7 +104,163 @@ Python
 &lt;$let test="Tiger"&gt;
 &lt;$codeblock code=&lt;&lt;test&gt;&gt;/&gt;
 &lt;/$let&gt;
-&lt;/div&gt;</code></p></div></div>
+&lt;/div&gt;</code></p></div><p>In this example, we override the <a class="tc-tiddlylink tc-tiddlylink-resolves" href="LinkWidget.html"><code class="doc-widget">$link</code></a> widget to automatically display an icon next to the link if the target tiddler has an <code>icon</code> field. We use the <a class="tc-tiddlylink tc-tiddlylink-resolves" href="ParametersWidget.html"><code class="doc-widget">$parameters</code></a> widget to capture all attributes passed to the original link and forward them to the underlying widget via <a class="tc-tiddlylink tc-tiddlylink-resolves" href="GenesisWidget.html"><code class="doc-widget">$genesis</code></a>:</p><div class="doc-example"><pre><code>\widget $link()
+\function link.icon()
+[&lt;params-var&gt;jsonget[to]else&lt;currentTiddler&gt;get[icon]]
+\end link.icon
+\function link.text()
+[&lt;params-var&gt;jsonget[to]else&lt;currentTiddler&gt;]
+\end link.text
+\whitespace trim
+&lt;$parameters $params="params-var"&gt;
+	&lt;$genesis
+		$type="$link"
+		$remappable="no"
+		$names="[&lt;params-var&gt;jsonindexes[]]"
+		$values="[&lt;params-var&gt;jsonindexes[]] :map[&lt;params-var&gt;jsonget&lt;currentTiddler&gt;]"
+	&gt;
+		&lt;%if [&lt;link.icon&gt;]%&gt;
+			&lt;span class="tc-tiddler-title-icon tc-titlebar" style="fill:currentColor;font-size:11pt!important"&gt;
+				&lt;$transclude $tiddler=&lt;&lt;link.icon&gt;&gt; size="11pt"/&gt;
+			&lt;/span&gt;
+		&lt;%endif%&gt;
+		&lt;$slot $name="ts-raw"&gt;
+			&lt;$text text=&lt;&lt;link.text&gt;&gt; /&gt;
+		&lt;/$slot&gt;
+	&lt;/$genesis&gt;
+&lt;/$parameters&gt;
+\end
+
+&lt;&lt;list-links "[has[icon]]"&gt;&gt;</code></pre><p>Este es su aspecto:</p><p>\widget $link()
+\function link.icon()
+[<params-var>jsonget[to]else<currentTiddler>get[icon]]
+\end link.icon
+\function link.text()
+[<params-var>jsonget[to]else<currentTiddler>]
+\end link.text
+\whitespace trim
+
+	<a class="tc-tiddlylink tc-tiddlylink-resolves" href="Custom%2520Widgets.html">
+		
+			<span class="tc-tiddler-title-icon tc-titlebar" style="fill:currentColor;font-size:11pt!important;">
+				!! Introduction
+
+<a class="tc-tiddlylink tc-tiddlylink-resolves doc-from-version doc-from-version-new" href="Release%25205.3.0.html"><span class="tc-tiny-gap-right"><svg class="tc-image-info-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><g fill-rule="evenodd" transform="translate(.05)"><path d="M64 128c35.346 0 64-28.654 64-64 0-35.346-28.654-64-64-64C28.654 0 0 28.654 0 64c0 35.346 28.654 64 64 64zm0-16c26.51 0 48-21.49 48-48S90.51 16 64 16 16 37.49 16 64s21.49 48 48 48z"></path><circle cx="64" cy="32" r="8"></circle><rect height="56" rx="8" width="16" x="56" y="48"></rect></g></svg></span>New in v5.3.0</a> A <dfn class="doc-def">custom widget</dfn> is a special kind of <a class="tc-tiddlylink tc-tiddlylink-resolves" href="Procedures.html">procedure</a> that can be called using the same syntax as widgets.
+
+Custom widgets can also be used to override built-in <a class="tc-tiddlylink tc-tiddlylink-resolves" href="JavaScript.html">JavaScript</a> widgets to customise their behaviour. 
+
+!! Defining Custom Widgets
+
+Custom widgets are usually defined with the <a class="tc-tiddlylink tc-tiddlylink-resolves" href="Pragma%253A%2520%255Cwidget.html">Pragma: \widget</a>:
+
+<code>`
+\widget $my.widget(attribute:"Default value")
+This is the widget, and the attribute is &lt;&lt;attribute&gt;&gt;.
+\end
+</code><code>
+
+The name of the widget must start with a dollar sign. If it is a user defined widget that does not override an existing widget then it must include at least one period (dot) within the name (for example </code>$my.widget<code> or </code>$acme.logger<code>).
+
+Note that the [[Pragma: \whitespace]] setting is inherited from the parsing context in which the procedure definition occurs. That means that a tiddler containing multiple procedure definitions only needs a single whitespace pragma at the top of the tiddler, and the setting will be automatically inherited by the procedure definitions without needing the pragma to be repeated.
+
+!! Using Custom Widgets
+
+Custom widgets are called in the same way as ordinary built-in widgets:
+
+</code><code>
+&lt;$my.widget/&gt;
+
+&lt;$my.widget attribute="The parameter"/&gt;
+</code><code>
+
+The attributes that are specified in the widget call are made available as parameter variables.
+
+!! Accessing Content of Custom Widgets
+
+Within the definition of a custom widget the content of the calling widget is available via the </code><code> widget. The contents of the &lt;&lt;.wlink SlotWidget&gt;&gt; widget is used as the default content if the widget was called without any content.
+
+For example:
+
+&lt;&lt;wikitext-example-without-html """\widget $my.widget(one:'Jaguar')
+&lt;$text text=&lt;&lt;one&gt;&gt;/&gt;
+&lt;$slot $name="ts-raw"&gt;
+	Whale
+&lt;/$slot&gt;
+\end
+
+&lt;$my.widget one="Dingo"&gt;
+	Crocodile
+&lt;/$my.widget&gt;
+
+&lt;$my.widget/&gt;"""&gt;&gt;
+
+!! How Custom Widgets Work
+
+Custom widgets are implemented as a special kind of [[variable|Variables]]. The only thing that distinguishes them from ordinary variables is the way that they can be called as a custom widget with attributes mapped to parameters.
+
+!! Overriding Core ~JavaScript Widgets
+
+Custom widgets can use the &lt;&lt;.wlink "GenesisWidget"&gt;&gt; widget to invoke the original widget, bypassing the override. For example, here we override the &lt;&lt;.wlink CodeBlockWidget&gt;&gt; widget to add </code>≤≥<code> symbols around each string of text.
+
+
+&lt;&lt;wikitext-example-without-html """\widget $codeblock(code)
+&lt;$genesis $type="$codeblock" $remappable="no" code={{{ [&lt;code&gt;addprefix[≤]addsuffix[≥]] }}}/&gt;
+\end
+
+&lt;$codeblock code="Kangaroo"/&gt;
+
+&lt;$codeblock code={{$:/SiteTitle}}/&gt;
+
+</code><code>
+Python
+</code><code>
+
+&lt;$let test="Tiger"&gt;
+&lt;$codeblock code=&lt;&lt;test&gt;&gt;/&gt;
+&lt;/$let&gt;"""&gt;&gt;
+
+In this example, we override the &lt;&lt;.wlink "LinkWidget"&gt;&gt; widget to automatically display an icon next to the link if the target tiddler has an </code>icon<code> field. We use the &lt;&lt;.wlink "ParametersWidget"&gt;&gt; widget to capture all attributes passed to the original link and forward them to the underlying widget via &lt;&lt;.wlink "GenesisWidget"&gt;&gt;:
+
+&lt;&lt;wikitext-example-without-html """\widget $link()
+\function link.icon()
+[&lt;params-var&gt;jsonget[to]else&lt;currentTiddler&gt;get[icon]]
+\end link.icon
+\function link.text()
+[&lt;params-var&gt;jsonget[to]else&lt;currentTiddler&gt;]
+\end link.text
+\whitespace trim
+&lt;$parameters $params="params-var"&gt;
+	&lt;$genesis
+		$type="$link"
+		$remappable="no"
+		$names="[&lt;params-var&gt;jsonindexes[]]"
+		$values="[&lt;params-var&gt;jsonindexes[]] :map[&lt;params-var&gt;jsonget&lt;currentTiddler&gt;]"
+	&gt;
+		&lt;%if [&lt;link.icon&gt;]%&gt;
+			&lt;span class="tc-tiddler-title-icon tc-titlebar" style="fill:currentColor;font-size:11pt!important"&gt;
+				&lt;$transclude $tiddler=&lt;&lt;link.icon&gt;&gt; size="11pt"/&gt;
+			&lt;/span&gt;
+		&lt;%endif%&gt;
+		&lt;$slot $name="ts-raw"&gt;
+			&lt;$text text=&lt;&lt;link.text&gt;&gt; /&gt;
+		&lt;/$slot&gt;
+	&lt;/$genesis&gt;
+&lt;/$parameters&gt;
+\end
+
+&lt;&lt;list-links "[has[icon]]"&gt;&gt;"""&gt;&gt;
+</code>
+			</span>
+		
+		
+			
+		
+	</a>
+
+\end
+
+<ul class=""><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="%2524%253A%252F_tw_shared%252Fsites%252Fclassic.tiddlywiki.com.html">classic.tiddlywiki.com</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="%2524%253A%252F_tw_shared%252Fsites%252Flinks.tiddlywiki.org.html">links.tiddlywiki.org</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="%2524%253A%252F_tw_shared%252Fsites%252Fmarketplace.html">marketplace</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="%2524%253A%252F_tw_shared%252Fsites%252Fmws.tiddlywiki.com.html">mws.tiddlywiki.com</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="%2524%253A%252F_tw_shared%252Fsites%252Ftalk.tiddlywiki.org.html">talk.tiddlywiki.org</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="%2524%253A%252F_tw_shared%252Fsites%252Ftiddlywiki.com.html">tiddlywiki.com</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="%2524%253A%252F_tw_shared%252Fsites%252Ftiddlywiki.com.dev.html">tiddlywiki.com/dev</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="%2524%253A%252F_tw_shared%252Fsites%252Ftiddlywiki.com.prerelease.html">tiddlywiki.com/prerelease</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="%2524%253A%252F_tw_shared%252Fsites%252Ftiddlywiki.com.upgrade.html">tiddlywiki.com/upgrade.html</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="%2524%253A%252F_tw_shared%252Fsites%252Ftiddlywiki.org.html">tiddlywiki.org</a></li><li><a class="tc-tiddlylink tc-tiddlylink-shadow tc-tiddlylink-resolves" href="%2524%253A%252FAdvancedSearch.html">Búsqueda avanzada</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="done.html">done</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Find%2520Out%2520More.html">Find Out More</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="HelloThumbnail%2520-%2520Introduction%2520Video.html">Introducción a TiddlyWiki</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Project%2520Team.html">Project Team</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Quick%2520Start.html">Quick Start</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Quick%2520Start%253A%2520Desktop.html">Desktop</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Quick%2520Start%253A%2520DIY.html">DIY</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Quick%2520Start%253A%2520Tiddlyhost.html">Tiddlyhost</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Quick%2520Start%253A%2520Xememex.html">Xememex</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="TalkTiddlyWiki.html">TalkTiddlyWiki</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Testimonials%2520and%2520Reviews.html">Testimonials and Reviews</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="TiddlyWiki%2520on%2520Discord.html">Discord</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="TiddlyWiki%2520on%2520GitHub.html">GitHub</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="TiddlyWiki%2520on%2520Mastodon.html">Mastodon</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="TiddlyWiki%2520on%2520Open%2520Collective.html">Open Collective</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="TiddlyWiki%2520on%2520Reddit.html">Reddit</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="TiddlyWiki%2520on%2520the%2520Web.html">TiddlyWiki on the Web</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="TiddlyWiki%2520on%2520YouTube.html">YouTube</a></li></ul>
+&lt;/div&gt;</currentTiddler></params-var></currentTiddler></params-var></p></div></div>
 
 
 </div></p>
