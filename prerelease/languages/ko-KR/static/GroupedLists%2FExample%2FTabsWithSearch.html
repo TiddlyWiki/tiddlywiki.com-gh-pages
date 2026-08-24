@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.5.0-prerelease" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>GroupedLists/Example/TabsWithSearch: 티들리위키 — 줄 없는 개인 웹 공책</title>
+</head>
+<body class="tc-body">
+<p><div class="tc-static-alert"><div class="tc-static-alert-inner">이 문서는 <a class="tc-tiddlylink-external" href="https://tiddlywiki.com/languages/ko-KR/" rel="noopener noreferrer" target="_blank">https://tiddlywiki.com/languages/ko-KR/</a>에서 티들리위키의 정적 HTML 표현의 일부입니다</div></div>
+</p>
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-%24%3A%2Ftags%2Fwiki-test-spec tc-tagged-GroupedLists" data-tags="$:/tags/wiki-test-spec GroupedLists" data-tiddler-title="GroupedLists/Example/TabsWithSearch" role="article"><div class="tc-tiddler-title">
+<div class="tc-titlebar">
+<span class="tc-tiddler-controls">
+<span class="tc-reveal"><button aria-expanded="false" aria-label="더 보기" class="tc-btn-invisible" title="더 많은 동작을 봅니다"></button><span class="tc-reveal" hidden="true"></span></span><span class="tc-reveal" hidden="true"></span><span class="tc-reveal" hidden="true"></span><span class="tc-reveal" hidden="true"></span><span class="tc-reveal" hidden="true"></span><span class="tc-reveal" hidden="true"></span><span class="tc-reveal"><button aria-label="이 티들러를 편집합니다" class="tc-btn-invisible" title="이 티들러를 편집합니다"></button></span><span class="tc-reveal" hidden="true"></span><span class="tc-reveal" hidden="true"></span><span class="tc-reveal" hidden="true"></span><span class="tc-reveal" hidden="true"></span><span class="tc-reveal" hidden="true"></span><span class="tc-reveal"><button aria-label="닫기" class="tc-btn-invisible" title="이 티들러를 닫습니다"></button></span><span class="tc-reveal" hidden="true"></span><span class="tc-reveal" hidden="true"></span><span class="tc-reveal" hidden="true"></span>
+</span>
+
+<span>
+
+<span class="tc-tiddler-title-icon">
+
+</span>
+
+
+
+<h2 class="tc-title">
+
+GroupedLists/Example/TabsWithSearch
+
+</h2>
+
+</span>
+
+</div>
+
+<div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div>
+</div><div class="tc-reveal"></div><div class="tc-reveal"><div class="tc-subtitle tc-clearfix">2026년 7월 29일 오후 7:04</div></div><div class="tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item">
+
+
+<button aria-expanded="false" class="tc-btn-invisible tc-tag-label" style="fill:#333333;color:#333333;">
+ $:/tags/wiki-test-spec
+</button>
+<span class="tc-reveal" hidden="true"></span>
+
+
+</span><span class="tc-tag-list-item">
+
+
+<button aria-expanded="false" class="tc-btn-invisible tc-tag-label" style="fill:#333333;color:#333333;">
+ GroupedLists
+</button>
+<span class="tc-reveal" hidden="true"></span>
+
+
+</span></div></div><div class="tc-tiddler-body tc-clearfix tc-reveal"><p><div class="tc-test-case "><div><p><div class="tc-test-case-wrapper"><div class="tc-test-case-header"><h2><a class="tc-tiddlylink tc-tiddlylink-missing" href="GroupedLists%252FExample%252FTabsWithSearch.html">Combine the tab strip with a search box inside the tab panel</a><span class="tc-test-case-toolbar"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible" title="More actions"><svg class="tc-image-down-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M64.177 100.069a7.889 7.889 0 01-5.6-2.316l-55.98-55.98a7.92 7.92 0 010-11.196c3.086-3.085 8.105-3.092 11.196 0l50.382 50.382 50.382-50.382a7.92 7.92 0 0111.195 0c3.086 3.086 3.092 8.104 0 11.196l-55.98 55.98a7.892 7.892 0 01-5.595 2.316z"></path></svg></button><span class="tc-reveal" hidden="true"></span></span></h2></div><div class="tc-test-case-narrative"><p><code>_TabContent</code> holds the search box as well as the list, so the search sits inside the panel and filters within the selected tab.</p><p>Which values each definition reads is the whole design:</p><ul><li><code>f.letters</code> reads the <em>unfiltered</em> values, so tabs never disappear while you type and the selected tab cannot be stranded on an empty panel</li><li><code>f.valuesShown</code> reads the <em>filtered</em> values, so the counts follow the search and a tab showing zero tells you not to look there</li></ul><p>This test case carries the same <code>_TabButton</code> and <code>_TabContent</code> payload tiddlers as the previous example, with the search box added to the panel.</p><p>The input is a sibling of the list rather than a child of anything that recomputes, which is what keeps the cursor in the box while you type.</p><p>Type <code>ba</code> and watch the counts change. Any tab whose count falls to zero shows the <code>emptyMessage</code> of the list instead of nothing at all.</p></div><div class="tc-test-case-panes"><div class="tc-test-case-source"><div class="tc-tab-set " role="tablist"><div class="tc-tab-buttons "><button aria-selected="true" class=" tc-tab-selected" data-tab-title="Output" role="tab">Output</button><button aria-selected="false" class="" data-tab-title="_TabButton" role="tab">_TabButton</button><button aria-selected="false" class="" data-tab-title="_TabContent" role="tab">_TabContent</button><button aria-selected="false" class="" data-tab-title="3DWiki2011" role="tab">3DWiki2011</button><button aria-selected="false" class="" data-tab-title="3rdWave2014" role="tab">3rdWave2014</button><button aria-selected="false" class="" data-tab-title="Aronsson2002" role="tab">Aronsson2002</button><button aria-selected="false" class="" data-tab-title="Atkinson2016" role="tab">Atkinson2016</button><button aria-selected="false" class="" data-tab-title="Bakshi2016" role="tab">Bakshi2016</button><button aria-selected="false" class="" data-tab-title="Barker2008" role="tab">Barker2008</button><button aria-selected="false" class="" data-tab-title="Barker2008a" role="tab">Barker2008a</button><button aria-selected="false" class="" data-tab-title="Bernstein2016" role="tab">Bernstein2016</button><button aria-selected="false" class="" data-tab-title="Dalgaard2001" role="tab">Dalgaard2001</button><button aria-selected="false" class="" data-tab-title="Dickinson2008" role="tab">Dickinson2008</button><button aria-selected="false" class="" data-tab-title="Finnemann2016" role="tab">Finnemann2016</button><button aria-selected="false" class="" data-tab-title="Frumkin2005" role="tab">Frumkin2005</button><button aria-selected="false" class="" data-tab-title="Maier2016" role="tab">Maier2016</button><button aria-selected="false" class="" data-tab-title="Morris2007" role="tab">Morris2007</button><button aria-selected="false" class="" data-tab-title="Ruston2004" role="tab">Ruston2004</button><button aria-selected="false" class="" data-tab-title="Rutherford2009" role="tab">Rutherford2009</button><button aria-selected="false" class="" data-tab-title="Schaffert2006" role="tab">Schaffert2006</button><button aria-selected="false" class="" data-tab-title="Shang2016" role="tab">Shang2016</button><button aria-selected="false" class="" data-tab-title="Shang2016a" role="tab">Shang2016a</button><button aria-selected="false" class="" data-tab-title="Skiba2005" role="tab">Skiba2005</button><button aria-selected="false" class="" data-tab-title="Trentin2009" role="tab">Trentin2009</button><button aria-selected="false" class="" data-tab-title="Truman2016" role="tab">Truman2016</button><button aria-selected="false" class="" data-tab-title="Wagner2004" role="tab">Wagner2004</button><button aria-selected="false" class="" data-tab-title="Wilson2007" role="tab">Wilson2007</button></div><div class="tc-tab-divider "></div><div class="tc-tab-content " role="tabpanel"><div class="tc-reveal"><table class="tc-field-table"><tbody><tr><td>title</td><td>Output</td></tr></tbody></table><textarea class="tc-edit-texteditor">\whitespace trim
+
+&lt;!-- Filter operator suffixes cannot be variables, so search:&lt;groupField&gt; and bibtex-author&lt;value&gt; are impossible.
+f.valuesFound searches the collected values as titles, f.tiddlersFor compares via get&lt;groupField&gt;. --&gt;
+
+&lt;!-- No trailing whitespace after the field name: it becomes part of the name and the list silently renders nothing --&gt;
+\procedure groupField() bibtex-author
+
+\procedure groupLabel() Author
+
+\function f.valuesAll() [all[tiddlers]!is[system]has&lt;groupField&gt;each&lt;groupField&gt;get&lt;groupField&gt;sort[]]
+
+\function f.valuesFound() [f.valuesAll[]] :filter[search:title{$:/temp/GroupedLists/search}]
+
+\function f.letters() [f.valuesAll[]] :map[uppercase[]split[]first[]] +[unique[]sort[]]
+
+\function f.valuesFor(letter) [f.valuesFound[]] :filter[uppercase[]split[]first[]match&lt;letter&gt;]
+
+\function f.valuesShown(letter) [f.valuesFound[]] :filter[&lt;letter&gt;match[All]] :else[f.valuesFor&lt;letter&gt;]
+
+\function f.tiddlersFor(value) [!is[system]has&lt;groupField&gt;] :filter[get&lt;groupField&gt;match&lt;value&gt;] +[sort[title]]
+
+&lt;!-- The inline style below is only for this self-contained example. For production, define styles in a tiddler tagged $:/tags/Stylesheet instead. --&gt;
+&lt;style&gt;.demo-group-filter { margin-bottom: 1em; }&lt;/style&gt;
+
+&lt;$macrocall
+	$name="tabs"
+	tabsList="[[All]] [f.letters[]]"
+	default="All"
+	state="$:/state/GroupedLists/tab-search"
+	buttonTemplate="_TabButton"
+	template="_TabContent"
+/&gt;</textarea><div class="tc-test-case-footer-toolbar"><button class="tc-btn-invisible" title="Copy this text to the clipboard"><svg class="tc-image-copy-clipboard tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><g fill-rule="evenodd"><rect height="8" rx="4" width="33" x="40" y="40"></rect><rect height="8" rx="4" width="17" x="40" y="82"></rect><rect height="8" rx="4" width="17" x="40" y="54"></rect><rect height="8" rx="4" width="33" x="40" y="96"></rect><rect height="8" rx="4" width="12" x="40" y="68"></rect><path d="M40 16H24c-4.419 0-8 3.59-8 8a8.031 8.031 0 000 .01v95.98a8.03 8.03 0 000 .01c0 4.41 3.581 8 8 8h80a7.975 7.975 0 005.652-2.34 7.958 7.958 0 002.348-5.652v-16.016c0-4.414-3.582-7.992-8-7.992-4.41 0-8 3.578-8 7.992V112H32V32h64v8.008C96 44.422 99.582 48 104 48c4.41 0 8-3.578 8-7.992V23.992a7.963 7.963 0 00-2.343-5.651A7.995 7.995 0 00104.001 16H88c0-4.41-3.585-8-8.007-8H48.007C43.588 8 40 11.582 40 16zm4-1.004A4.001 4.001 0 0148 11h32c2.21 0 4 1.797 4 3.996v4.008A4.001 4.001 0 0180 23H48c-2.21 0-4-1.797-4-3.996v-4.008z"></path><rect height="16" rx="8" width="66" x="62" y="64"></rect><path d="M84.657 82.343l-16-16v11.314l16-16a8 8 0 10-11.314-11.314l-16 16a8 8 0 000 11.314l16 16a8 8 0 1011.314-11.314z"></path></g></svg><span class="tc-tiny-gap-left">copy to clipboard</span></button></div></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div></div></div></div><div class="tc-test-case-divider"></div><div class="tc-test-case-output"><p><style>.demo-group-filter { margin-bottom: 1em; }</style></p><p><div class="tc-tab-set " role="tablist"><div class="tc-tab-buttons "><button aria-selected="true" class=" tc-tab-selected" data-tab-title="All" role="tab">All<span class="tc-tiny-gap-left">(22)</span></button><button aria-selected="false" class="" data-tab-title="3" role="tab">3<span class="tc-tiny-gap-left">(2)</span></button><button aria-selected="false" class="" data-tab-title="A" role="tab">A<span class="tc-tiny-gap-left">(2)</span></button><button aria-selected="false" class="" data-tab-title="B" role="tab">B<span class="tc-tiny-gap-left">(3)</span></button><button aria-selected="false" class="" data-tab-title="D" role="tab">D<span class="tc-tiny-gap-left">(2)</span></button><button aria-selected="false" class="" data-tab-title="F" role="tab">F<span class="tc-tiny-gap-left">(2)</span></button><button aria-selected="false" class="" data-tab-title="M" role="tab">M<span class="tc-tiny-gap-left">(2)</span></button><button aria-selected="false" class="" data-tab-title="R" role="tab">R<span class="tc-tiny-gap-left">(2)</span></button><button aria-selected="false" class="" data-tab-title="S" role="tab">S<span class="tc-tiny-gap-left">(3)</span></button><button aria-selected="false" class="" data-tab-title="T" role="tab">T<span class="tc-tiny-gap-left">(2)</span></button><button aria-selected="false" class="" data-tab-title="W" role="tab">W<span class="tc-tiny-gap-left">(2)</span></button></div><div class="tc-tab-divider "></div><div class="tc-tab-content " role="tabpanel"><div class="tc-reveal"><p><div class="tc-search demo-group-filter"><label>Author:<input class="tc-tiny-gap" placeholder="Filter by Author" type="search" value=""></label></div><div class="tc-menu-list-item">3D Wiki Collective<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="3DWiki2011.html">Spatial Notes in Three Dimensions</a></div></div><div class="tc-menu-list-item">3rd Wave Research Group<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="3rdWave2014.html">Note Taking After the Desktop</a></div></div><div class="tc-menu-list-item">Aronsson, Lars<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Aronsson2002.html">Operation of a Large Scale, General Purpose Wiki Website</a></div></div><div class="tc-menu-list-item">Atkinson, Paul<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Atkinson2016.html">Digital ethnographies</a></div></div><div class="tc-menu-list-item">Bakshi, Divya<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Bakshi2016.html">Hypertext and Feminisms: Voicing the Silence</a></div></div><div class="tc-menu-list-item">Barker, Philip<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Barker2008.html">Using wikis and weblogs to enhance human performance</a></div><div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Barker2008a.html">Using Wikis for Knowledge Management</a></div></div><div class="tc-menu-list-item">Bernstein, Mark<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Bernstein2016.html">Getting Started With Hypertext Narrative</a></div></div><div class="tc-menu-list-item">Dalgaard, Rune<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Dalgaard2001.html">Hypertext and the Scholarly Archive: Intertexts, Paratexts and Metatexts at Work</a></div></div><div class="tc-menu-list-item">Dickinson, Anne<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Dickinson2008.html">Is the e-Learning Object Create Interactive Accessible e-Learning Accessible?</a></div></div><div class="tc-menu-list-item">Finnemann, Niels Ole<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Finnemann2016.html">Hypertext configurations: Genres in networked digital media</a></div></div><div class="tc-menu-list-item">Frumkin, Jeremy<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Frumkin2005.html">The wiki and the digital library</a></div></div><div class="tc-menu-list-item">Maier, Carmen Daniela<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Maier2016.html">Hypertext and Hypermedia</a></div></div><div class="tc-menu-list-item">Morris, Joseph C.<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Morris2007.html">DistriWiki: a distributed peer-to-peer wiki network</a></div></div><div class="tc-menu-list-item">Ruston, Jeremy<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Ruston2004.html">TiddlyWiki</a></div></div><div class="tc-menu-list-item">Rutherford, Jayne<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Rutherford2009.html">Graphical Input for TiddlyWiki</a></div></div><div class="tc-menu-list-item">Schaffert, Sebastian<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Schaffert2006.html">IkeWiki: A semantic wiki for collaborative knowledge management</a></div></div><div class="tc-menu-list-item">Shang, Hui-Fang<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Shang2016.html">Online metacognitive strategies, hypermedia annotations, and motivation on hypertext comprehension</a></div><div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Shang2016a.html">Exploring demographic and motivational factors associated with hypertext reading by English as a foreign language students</a></div></div><div class="tc-menu-list-item">Skiba, Diane J.<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Skiba2005.html">Do your students wiki?</a></div></div><div class="tc-menu-list-item">Trentin, Guglielmo<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Trentin2009.html">Using a wiki to evaluate individual contribution to a collaborative learning project</a></div></div><div class="tc-menu-list-item">Truman, Gail<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Truman2016.html">Web Archiving Environmental Scan</a></div></div><div class="tc-menu-list-item">Wagner, Christian<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Wagner2004.html">Wiki: A technology for conversational knowledge management and group collaboration</a></div></div><div class="tc-menu-list-item">Wilson, Tom D.<div class="tc-menu-list-subitem"><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Wilson2007.html">Review of TiddlyWiki 2.1.3</a></div></div></p></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div><div class="tc-reveal" hidden="true"></div></div></div></p></div></div></div></p></div></div></p></div>
+
+
+</div></p>
+</section>
+</body>
+</html>
+
