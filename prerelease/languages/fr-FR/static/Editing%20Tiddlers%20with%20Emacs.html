@@ -24,8 +24,8 @@
   (dired "~/Dropbox/wiki/tiddlers/"))</code></pre><pre><code>(defun browse-wiki ()
   "Opens TiddlyWiki in the browser."
   (interactive)
-  (browse-url "127.0.0.1:8080/"))</code></pre><p>Cette fonction ultérieure  nécessite un navigateur spécifique&lt;&lt;:&gt;&gt;</p><pre><code>(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "chromium")</code></pre><p>Vous pouvez créer un raccourci clavier vers chacune de ces fonctions avec la fonction global-set-key&lt;&lt;:&gt;&gt;</p><pre><code>(global-set-key (kbd "C-c w") 'open-wiki)</code></pre><p>À ce jour, cela n'est pas intégré dans tid-mode.
+  (browse-url "127.0.0.1:8080/"))</code></pre><p>Cette fonction ultérieure  nécessite un navigateur spécifique :</p><pre><code>(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "chromium")</code></pre><p>Vous pouvez créer un raccourci clavier vers chacune de ces fonctions avec la fonction global-set-key :</p><pre><code>(global-set-key (kbd "C-c w") 'open-wiki)</code></pre><p>À ce jour, cela n'est pas intégré dans tid-mode.
 </p></div>
 
 
