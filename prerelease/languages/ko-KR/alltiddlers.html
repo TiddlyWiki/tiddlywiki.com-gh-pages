@@ -70949,6 +70949,16 @@ $:/changenotes/5.5.0/#10018
 </li>
 
 <li>
+<a class="tc-tiddlylink tc-tiddlylink-resolves" href="#%24%3A%2Fchangenotes%2F5.5.0%2F%2310064">
+
+
+$:/changenotes/5.5.0/#10064
+
+
+</a>
+</li>
+
+<li>
 <a class="tc-tiddlylink tc-tiddlylink-resolves" href="#%24%3A%2Fchangenotes%2F5.5.0%2F%2310070">
 
 
@@ -115074,7 +115084,8 @@ WebServer Parameter: use-browser-cache
 <span class="tc-reveal" hidden="true"></span>
 
 
-</span></div></div><div class="tc-tiddler-body tc-clearfix tc-reveal"><p>The <a class="tc-tiddlylink tc-tiddlylink-resolves" href="#WebServer%20Parameters">web server configuration parameter</a> <strong>use-browser-cache=yes</strong> activates 200 OK browser caching via the <code>Cache-Control</code> header and a smart a Etag header:</p><ul><li>The server javascript creates an MD5 <code>hash</code> object.</li><li>Adds the data of the current <code>request:response</code> (for example: json text or an image binary) to the hash object.</li><li>Adds the current <code>headers</code> of the response to the hash object.</li><li>If the response data has an <code>encoding</code> value, adds the encoding to the hash object.</li><li>Calculates the final MD5 hash string as a <code>contentDigest</code> javascript variable, and saves it as an <code>Etag: "&lt;&lt;contentDigest&gt;&gt;"</code> header.</li></ul><p>If the incoming request contains a header named <code>if-none-match</code>, then the server will check the generated Etag against all values.</p><p>If any <code>if-none-match</code> value DOES match the current Etag, the server will send a <code>304 NOT MODIFIED</code> response with the current response headers, instead of the data with a <code>200 OK</code> response.</p><p>This saves bandwidth, as the client can be sure they have already received the exact data and has it in their current cache.</p><p>If <strong>use-browser-cache=no</strong> (or any other value including null), then the server will return a <code>Cache-Control: no-store</code> header by default.</p><p>If any customer server route module defines custom <code>Cache-Control</code> header behavior, then the server will pass that header through instead of the default.</p></div>
+</span></div></div><div class="tc-tiddler-body tc-clearfix tc-reveal"><p>The <a class="tc-tiddlylink tc-tiddlylink-resolves" href="#WebServer%20Parameters">web server configuration parameter</a> <strong>use-browser-cache=yes</strong> activates browser caching via the <code>Cache-Control</code> and <code>Etag</code> headers. For responses generated in memory:</p><ul><li>The server javascript creates an MD5 <code>hash</code> object.</li><li>Adds the data of the current <code>request:response</code> (for example: json text or an image binary) to the hash object.</li><li>Adds the current <code>headers</code> of the response to the hash object.</li><li>If the response data has an <code>encoding</code> value, adds the encoding to the hash object.</li><li>Calculates the final MD5 hash string as a <code>contentDigest</code> javascript variable, and saves it as an <code>Etag: "&lt;&lt;contentDigest&gt;&gt;"</code> header.</li></ul><p>Streamed static files use a weak ETag based on file size and modification time.</p><p>If the incoming request contains a header named <code>if-none-match</code>, then the server will check the generated Etag against all values.</p><p>If any <code>if-none-match</code> value DOES match the current Etag, the server will send a <code>304 NOT MODIFIED</code> response with the current response headers, instead of the data with a <code>200 OK</code> response.</p><p>This saves bandwidth, as the client can be sure they have already received the exact data and has it in their current cache.</p><p>If <strong>use-browser-cache=no</strong> (or any other value including null), then the server will return a <code>Cache-Control: no-store</code> header by default.</p><p>If any customer server route module defines custom <code>Cache-Control</code> header behavior, then the server will pass that header through instead of the default.
+</p></div>
 
 
 </div>
